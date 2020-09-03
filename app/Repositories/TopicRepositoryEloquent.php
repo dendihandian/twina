@@ -7,6 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicRepository;
 use App\Entities\Topic;
 use App\Validators\TopicValidator;
+use App\Jobs\MiningTopic;
 
 /**
  * Class TopicRepositoryEloquent.
@@ -25,7 +26,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         return Topic::class;
     }
 
-    
+
 
     /**
      * Boot up the repository, pushing criteria
@@ -34,5 +35,13 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
+    public function startMining($topic)
+    {
+        $topic->update([
+            'on_queue' => true
+        ]);
+
+        MiningTopic::dispatch($topic);
+    }
 }

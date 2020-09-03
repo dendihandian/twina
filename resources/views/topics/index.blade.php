@@ -19,6 +19,7 @@
                                 <th scope="col">Last Mining</th>
                                 <th scope="col">On Queue</th>
                                 <th scope="col">Created At</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,6 +31,16 @@
                                     <td>{{ $topic->last_mining ?? '-' }}</td>
                                     <td>{{ $topic->on_queue ? 'Yes' : 'No' }}</td>
                                     <td>{{ $topic->created_at->diffForHumans() }}</td>
+                                    <td class="d-flex align-items-center justify-content-between">
+                                        @if (!$topic->on_queue)
+                                            <form action="{{ route('topics.mining', ['topic' => $topic->id]) }}" method="POST">
+                                                @csrf
+                                                <button class="btn btn-sm btn-success">Start Mining</button>
+                                            </form>
+                                        @else
+                                            <span>{{ __('On queue') }}</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

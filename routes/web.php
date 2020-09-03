@@ -26,4 +26,8 @@ Route::prefix('topics')->name('topics.')->group(function () {
     Route::get('/', 'TopicController@index')->name('index');
     Route::post('/', 'TopicController@store')->name('store');
     Route::get('/create', 'TopicController@create')->name('create');
+
+    Route::prefix('{topic}')->group(function () {
+        Route::post('/mining', 'TopicController@mining')->name('mining');
+    });
 });

@@ -11,5 +11,5 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 interface TopicRepository extends RepositoryInterface
 {
-    //
+    public function startMining($topic);
 }
