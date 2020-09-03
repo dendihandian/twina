@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Topic.
@@ -32,6 +33,13 @@ class Topic extends Model implements Transformable
         self::creating(function ($topic) {
             $topic->name = Str::lower($topic->name);
             $topic->slug = Str::slug($topic->name);
+        });
+
+        self::created(function ($topic) {
+            UserTopic::firstOrCreate([
+                'user_id' => Auth::id(),
+                'topic_id' => $topic->id,
+            ]);
         });
     }
 }

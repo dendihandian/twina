@@ -36,4 +36,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get all topics of the user.
+     */
+    public function topics()
+    {
+        return $this->hasManyThrough(
+            'App\Entities\Topic', // related
+            'App\Entities\UserTopic', // pivot
+            'user_id', // self id in pivot
+            'id', // related id in related
+            'id', // self id in self
+            'topic_id', // related id in pivot
+        );
+    }
 }

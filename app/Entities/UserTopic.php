@@ -17,4 +17,5 @@ class UserTopic extends Pivot
      * @var array
      */
     protected $guarded = [];
+    protected $table = 'user_topics';
 }
