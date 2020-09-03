@@ -28,7 +28,7 @@
                                     <th scope="row">{{ $topic->name }}</th>
                                     <td>{{ $topic->total_tweets }}</td>
                                     <td>{{ $topic->last_tweet ?? '-' }}</td>
-                                    <td>{{ $topic->last_mining ?? '-' }}</td>
+                                    <td>{{ $topic->last_mining ? $topic->last_mining->diffForHumans() : '-' }}</td>
                                     <td>{{ $topic->on_queue ? 'Yes' : 'No' }}</td>
                                     <td>{{ $topic->created_at->diffForHumans() }}</td>
                                     <td class="d-flex align-items-center justify-content-between">

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Entities\Topic;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class MiningTopic implements ShouldQueue
@@ -43,6 +44,7 @@ class MiningTopic implements ShouldQueue
 
         $this->topic->update([
             'on_queue' => false,
+            'last_mining' => Carbon::now(),
         ]);
 
         Log::debug('MiningTopic@handle end');

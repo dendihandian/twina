@@ -24,6 +24,15 @@ class Topic extends Model implements Transformable
      */
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'last_mining' => 'datetime:Y-m-d h:i:s'
+    ];
+
     public static function boot()
     {
         parent::boot();
