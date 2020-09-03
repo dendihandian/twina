@@ -15,10 +15,14 @@ class CreateTopicsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('topics', function(Blueprint $table) {
-            $table->increments('id');
-
-            $table->timestamps();
+		Schema::create('topics', function (Blueprint $table) {
+			$table->bigIncrements('id');
+			$table->bigInteger('user_id')->unsigned()->nullable();
+			$table->string('name');
+			$table->string('slug');
+			$table->integer('tweets_fetched')->unsigned()->default(0);
+			$table->bigInteger('last_tweet')->unsigned()->nullable();
+			$table->timestampsTz();
 		});
 	}
 

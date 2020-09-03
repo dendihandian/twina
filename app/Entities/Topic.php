@@ -5,6 +5,7 @@ namespace App\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Support\Str;
 
 /**
  * Class Topic.
@@ -20,6 +21,16 @@ class Topic extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $guarded = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // ref: https://stackoverflow.com/questions/38685019/laravel-how-to-create-a-function-after-or-before-saveupdate
+
+        self::creating(function ($topic) {
+            $topic->slug = Str::slug($topic->name);
+        });
+    }
 }

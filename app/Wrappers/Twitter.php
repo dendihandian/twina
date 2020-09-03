@@ -24,4 +24,17 @@ class Twitter
     {
         return $this->connection->get("account/verify_credentials");
     }
+
+    public function searchTweets($params)
+    {
+        // docs: https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
+
+        $params = [
+            'q' => $params['q'],
+            'result_type' => $params['result_type'] ?? 'recent', // mixed, recent, popular
+            'count' => 10,
+        ];
+
+        return $this->connection->get("search/tweets", $params);
+    }
 }

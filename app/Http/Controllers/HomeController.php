@@ -25,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $statuses = $this->twitter->searchTweets(['q' => 'laravel']);
+        // dd($statuses);
         $account = $this->twitter->getAccount();
         return view('home', ['account' => $account]);
     }
