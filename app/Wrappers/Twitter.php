@@ -32,7 +32,8 @@ class Twitter
         $params = [
             'q' => $params['q'],
             'result_type' => $params['result_type'] ?? 'recent', // mixed, recent, popular
-            'count' => 10,
+            'count' => $params['count'] ?? 10,
+            'since_id' => $params['since_id'] ?? null,
         ];
 
         return $this->connection->get("search/tweets", $params);
