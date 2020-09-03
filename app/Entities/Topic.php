@@ -30,6 +30,7 @@ class Topic extends Model implements Transformable
         // ref: https://stackoverflow.com/questions/38685019/laravel-how-to-create-a-function-after-or-before-saveupdate
 
         self::creating(function ($topic) {
+            $topic->name = Str::lower($topic->name);
             $topic->slug = Str::slug($topic->name);
         });
     }

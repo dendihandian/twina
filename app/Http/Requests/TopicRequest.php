@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class TopicRequest extends FormRequest
 {
@@ -24,7 +25,18 @@ class TopicRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|unique:topics,name',
         ];
+    }
+
+    public function getValidatorInstance()
+    {
+        if ($this->request->has('name')) {
+            $this->merge([
+                'name' => Str::lower($this->request->get('name')),
+            ]);
+        }
+
+        return parent::getValidatorInstance();
     }
 }

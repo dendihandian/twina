@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
+            <a href="{{ route('topics.index') }}" class="btn btn-info text-white mb-4">{{ __('Back to list') }}</a>
             <div class="card">
                 <div class="card-header">{{ __('Create a topic') }}</div>
                 <div class="card-body">
