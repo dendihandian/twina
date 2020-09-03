@@ -14,8 +14,10 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Topic</th>
-                                <th scope="col">Tweets Fetched</th>
+                                <th scope="col">Total Tweets</th>
                                 <th scope="col">Last Tweet</th>
+                                <th scope="col">Last Mining</th>
+                                <th scope="col">On Queue</th>
                                 <th scope="col">Created At</th>
                             </tr>
                         </thead>
@@ -23,8 +25,10 @@
                             @foreach ($topics as $topic)
                                 <tr>
                                     <th scope="row">{{ $topic->name }}</th>
-                                    <td>{{ $topic->tweets_fetched }}</td>
+                                    <td>{{ $topic->total_tweets }}</td>
                                     <td>{{ $topic->last_tweet ?? '-' }}</td>
+                                    <td>{{ $topic->last_mining ?? '-' }}</td>
+                                    <td>{{ $topic->on_queue ? 'Yes' : 'No' }}</td>
                                     <td>{{ $topic->created_at->diffForHumans() }}</td>
                                 </tr>
                             @endforeach

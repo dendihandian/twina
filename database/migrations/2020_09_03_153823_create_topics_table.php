@@ -20,8 +20,11 @@ class CreateTopicsTable extends Migration
 			$table->bigInteger('user_id')->unsigned()->nullable();
 			$table->string('name');
 			$table->string('slug');
-			$table->integer('tweets_fetched')->unsigned()->default(0);
+			$table->integer('total_tweets')->unsigned()->default(0);
+			$table->integer('last_fetched_tweets')->unsigned()->default(0);
 			$table->bigInteger('last_tweet')->unsigned()->nullable();
+			$table->dateTimeTz('last_mining')->nullable();
+			$table->boolean('on_queue')->default(false);
 			$table->timestampsTz();
 		});
 	}
