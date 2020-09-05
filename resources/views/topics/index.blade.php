@@ -4,10 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
+            <div class="row d-flex justify-content-end">
+                <a href="{{ route('topics.create') }}" class="btn btn-primary mb-4">Create a topic</a>
+            </div>
             <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="card-header">
                     <span>{{ __('My topics') }}</span>
-                    <a href="{{ route('topics.create') }}" class="btn btn-primary">Create a topic</a>
                 </div>
                 <div class="card-body">
                     <table class="table">
