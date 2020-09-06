@@ -1,7 +1,6 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
     var svg = d3.select("svg");
-    console.log('svg', svg.attr('width'));
     var width = svg.attr("width");
     var height = svg.attr("height");
 
@@ -22,7 +21,6 @@
         "https://gist.githubusercontent.com/dendihandian/7c2e187a5a71ba3011c767d97f95eb8f/raw/e0cea3a8959e2150e40659ca5ce32fff36a96da0/miserables.json";
 
     d3.json(url, function (error, graph) {
-        alert('mpe')
         if (error) throw error;
 
         var link = svg

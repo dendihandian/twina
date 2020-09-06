@@ -5,13 +5,23 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Graph Preview</div>
                 <div class="card-body">
                     @include('graph.svg')
+                </div>
+                <div class="card-footer text-right">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+            <div class="card">
+                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-body">
+                    @include('auth.forms.login')
                 </div>
             </div>
         </div>

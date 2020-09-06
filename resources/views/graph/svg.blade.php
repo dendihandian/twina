@@ -1,1 +1,1 @@
-<svg width="960" height="600"></svg>
+<svg width="960" height="450"></svg>
