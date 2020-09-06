@@ -23,7 +23,7 @@ class TopicController extends Controller
 
     public function index()
     {
-        $topics = $this->repository->getTopics(Auth::user());
+        $topics = $this->repository->getTopics(Auth::user()->id);
         return view('topics.index', compact('topics'));
     }
 
@@ -35,7 +35,7 @@ class TopicController extends Controller
     public function store(TopicRequest $request)
     {
         try {
-            $this->repository->createTopic(Auth::user(), $request->only('name'));
+            $this->repository->createTopic(Auth::user()->id, $request->only('name'));
             return redirect()->route('topics.index');
         } catch (\Throwable $th) {
             dd($th);
@@ -45,17 +45,17 @@ class TopicController extends Controller
     public function mining(Request $request, $topicId)
     {
         try {
-            DB::beginTransaction();
-            $topic = $this->repository->getTopic(Auth::user(), $topicId);
+            // DB::beginTransaction();
+            $topic = $this->repository->getTopic(Auth::user()->id, $topicId);
             if ($topic && !$topic['on_queue']) {
-                $this->repository->startMining(Auth::user(), $topicId);
+                $this->repository->startMining(Auth::user()->id, $topicId);
             }
 
-            DB::commit();
+            // DB::commit();
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            DB::rollBack();
+            // DB::rollBack();
             dd($th);
         }
     }

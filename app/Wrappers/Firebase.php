@@ -89,5 +89,15 @@ class Firebase
         return $response->json();
     }
 
-    public function getTopicTweets($userId, $topicId, )
+    public function getTopicTweets($userId, $topicId)
+    {
+        $response = Http::get($this->urlBuilder("/topics/users/{$userId}/{$topicId}/tweets"));
+        return $response->json();
+    }
+
+    public function putTopicTweets($userId, $topicId, $tweets)
+    {
+        $response = Http::put($this->urlBuilder("/topics/users/{$userId}/{$topicId}/tweets"), $tweets);
+        return $response->json();
+    }
 }

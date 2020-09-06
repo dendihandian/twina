@@ -42,30 +42,34 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function getTopics($user)
+    public function getTopics($userId)
     {
-        return $this->firebase->getTopics($user->id);
+        return $this->firebase->getTopics($userId);
     }
 
-    public function getTopic($user, $topicId)
+    public function getTopic($userId, $topicId)
     {
-        return $this->firebase->getTopic($user->id, $topicId);
+        return $this->firebase->getTopic($userId, $topicId);
     }
 
-    public function createTopic($user, $param)
+    public function createTopic($userId, $param)
     {
-        $this->firebase->addTopic($user->id, [
+        $this->firebase->addTopic($userId, [
             'text' => $param['name'],
         ]);
     }
 
-    public function startMining($user, $topicId)
+    public function updateTopic($userId, $topicId, $param)
     {
-        $this->firebase->updateTopic($user->id, $topicId, [
+        $this->firebase->updateTopic($userId, $topicId, $param);
+    }
+
+    public function startMining($userId, $topicId)
+    {
+        $this->firebase->updateTopic($userId, $topicId, [
             'on_queue' => true
         ]);
 
-        $topic = $this->getTopic($user, $topicId);
-        MiningTopic::dispatch($userId, $topic);
+        MiningTopic::dispatch($userId, $topicId);
     }
 }
