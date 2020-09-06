@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Wrappers\Twitter;
+use App\Wrappers\Firebase;
 
 class HomeController extends Controller
 {
@@ -16,6 +17,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->twitter = new Twitter;
+        $this->firebase = new Firebase;
     }
 
     /**
@@ -25,8 +27,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // dd($this->firebase->getPublicTopics());
         $statuses = $this->twitter->searchTweets(['q' => 'laravel']);
-        dd($statuses);
+        // $array = json_decode(json_encode($statuses->statuses), true);
+        dd(json_decode(json_encode($statuses->statuses), true));
         $account = $this->twitter->getAccount();
         return view('home', ['account' => $account]);
     }

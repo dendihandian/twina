@@ -7,6 +7,7 @@ use App\Http\Requests\TopicRequest;
 use App\Repositories\TopicRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Database\Eloquent\Collection;
 
 class TopicController extends Controller
 {
@@ -22,7 +23,7 @@ class TopicController extends Controller
 
     public function index()
     {
-        $topics = Auth::user()->topics;
+        $topics = $this->repository->getTopics(Auth::user());
         return view('topics.index', compact('topics'));
     }
 
@@ -34,7 +35,7 @@ class TopicController extends Controller
     public function store(TopicRequest $request)
     {
         try {
-            $this->repository->create($request->only('name'));
+            $this->repository->createTopic(Auth::user(), $request->only('name'));
             return redirect()->route('topics.index');
         } catch (\Throwable $th) {
             dd($th);
@@ -45,10 +46,9 @@ class TopicController extends Controller
     {
         try {
             DB::beginTransaction();
-            $topic = $this->repository->find($topicId);
-
-            if ($topic && !$topic->on_queue) {
-                $this->repository->startMining($topic);
+            $topic = $this->repository->getTopic(Auth::user(), $topicId);
+            if ($topic && !$topic['on_queue']) {
+                $this->repository->startMining(Auth::user(), $topicId);
             }
 
             DB::commit();
