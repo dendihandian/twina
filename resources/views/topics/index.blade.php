@@ -29,7 +29,7 @@
                             @foreach ($topics as $topicId => $topic)
                                 <tr>
                                     <th scope="row">{{ $topic['text'] ?? ''}}</th>
-                                    <td class="text-right">{{ (isset($topic['tweet_count']) && !empty($topic['tweet_count'])) ? $topic['tweet_count'] : '-' }}</td>
+                                    <td class="text-right">{{ (isset($topic['tweets_count']) && !empty($topic['tweets_count'])) ? $topic['tweets_count'] : '-' }}</td>
                                     <td class="text-center">
                                         @if ($topic['last_fetch_tweet'])
                                             <a href="{{ 'https://twitter.com/' . $topic['last_fetch_tweet']['user']['screen_name'] . '/status/' . $topic['last_fetch_tweet']['id'] }}" target="_blank">
