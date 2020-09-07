@@ -54,7 +54,7 @@ class MiningTopic implements ShouldQueue
             if ($this->userId) {
                 $topic = $topicRepository->getTopic($this->topicId, $this->userId);
             } else {
-                $topic = $topicRepository->getPublicTopic($this->topicId);
+                $topic = $topicRepository->getTopic($this->topicId);
             }
 
             Log::debug('topic text: ' . $topic['text']);
@@ -82,7 +82,7 @@ class MiningTopic implements ShouldQueue
                 if ($this->userId) {
                     $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId, $this->userId);
                 } else {
-                    $existingStatuses = $topicTweetRepository->getPublicTopicTweets($this->topicId);
+                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId);
                 }
 
                 $existingStatuses = (is_array($existingStatuses) && count($existingStatuses)) ? Collection::make($existingStatuses)->keyBy('id')->toArray() : [];
@@ -113,8 +113,8 @@ class MiningTopic implements ShouldQueue
                     $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses, $this->userId);
                     $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
                 } else {
-                    $topicTweetRepository->putPublicTopicTweets($this->topicId, $mergedStatuses);
-                    $topicRepository->updatePublicTopic($this->topicId, $updateParams);
+                    $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses);
+                    $topicRepository->updateTopic($this->topicId, $updateParams);
                 }
             }
         } catch (\Throwable $th) {
@@ -125,7 +125,7 @@ class MiningTopic implements ShouldQueue
             if ($this->userId) {
                 $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
             } else {
-                $topicRepository->updatePublicTopic($this->topicId, $updateParams);
+                $topicRepository->updateTopic($this->topicId, $updateParams);
             }
         }
 
