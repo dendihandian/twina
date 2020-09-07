@@ -28,5 +28,9 @@ Route::prefix('topics')->name('topics.')->middleware(['auth'])->group(function (
 
     Route::prefix('{topic}')->group(function () {
         Route::post('/mining', 'TopicController@mining')->name('mining');
+
+        Route::prefix('tweets')->name('tweets.')->group(function () {
+            Route::get('/', 'TopicTweetController@index')->name('index');
+        });
     });
 });

@@ -48,13 +48,13 @@ class Firebase
     {
         $defaultParam = [
             'text' => '',
-            'tweet_count' => 0,
-            'last_tweet' => '',
+            'last_fetch_tweet' => '',
             'last_fetch_count' => 0,
             'last_fetch_date' => 0,
-            'created_at' => Carbon::now()->toDateTimeString(),
-            'on_queue' => false,
             'tweets' => null,
+            'tweets_count' => 0,
+            'on_queue' => false,
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
 
         $param = array_merge($defaultParam, $param);
@@ -67,13 +67,13 @@ class Firebase
     {
         $defaultParam = [
             'text' => '',
-            'tweet_count' => 0,
-            'last_tweet' => '',
+            'last_fetch_tweet' => '',
             'last_fetch_count' => 0,
             'last_fetch_date' => 0,
-            'created_at' => Carbon::now()->toDateTimeString(),
-            'on_queue' => false,
             'tweets' => null,
+            'tweets_count' => 0,
+            'on_queue' => false,
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
 
         $param = array_merge($defaultParam, $param);

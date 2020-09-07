@@ -60,7 +60,7 @@ class MiningTopic implements ShouldQueue
                 'q' => $topic['text'],
             ];
 
-            $lastTweet = (isset($this->topic['last_tweet']) && !empty($this->topic['last_tweet'])) ? $this->topic['last_tweet'] : null;
+            $lastTweet = (isset($this->topic['last_fetch_tweet']) && !empty($this->topic['last_fetch_tweet'])) ? $this->topic['last_fetch_tweet'] : null;
 
             if ($lastTweet) {
                 $param['since_id'] = $lastTweet;
@@ -93,11 +93,11 @@ class MiningTopic implements ShouldQueue
                 $topicTweetRepository->putTopicTweets($this->userId, $this->topicId, $mergedStatuses);
 
                 $topicRepository->updateTopic($this->userId, $this->topicId, [
-                    'on_queue' => false,
-                    'tweet_count' => $tweetCount,
-                    'last_tweet' => $lastTweet,
+                    'last_fetch_tweet' => $lastTweet,
                     'last_fetch_count' => $lastFetchCount,
                     'last_fetch_date' => Carbon::now()->toDateTimeString(),
+                    'tweets_count' => $tweetCount,
+                    'on_queue' => false,
                 ]);
             }
 

@@ -31,8 +31,8 @@ class Twitter
 
         $params = [
             'q' => $params['q'],
-            'result_type' => $params['result_type'] ?? 'recent', // mixed, recent, popular
-            'count' => $params['count'] ?? 10,
+            'result_type' => $params['result_type'] ?? $this->config['search']['default']['result_type'], // mixed, recent, popular
+            'count' => $params['count'] ?? $this->config['search']['default']['count'],
             'since_id' => $params['since_id'] ?? null,
         ];
 
