@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="row d-flex justify-content-end">
@@ -29,9 +29,9 @@
                             @foreach ($topics as $topicId => $topic)
                                 <tr>
                                     <th scope="row">{{ $topic['text'] ?? ''}}</th>
-                                    <td>{{ (isset($topic['tweet_count']) && !empty($topic['tweet_count'])) ? $topic['tweet_count'] : '-' }}</td>
-                                    <td>{{ (isset($topic['last_tweet']) && !empty($topic['last_tweet'])) ? $topic['last_tweet'] : '-' }}</td>
-                                    <td>{{ (isset($topic['last_fetch_count']) && !empty($topic['last_fetch_count'])) ? $topic['last_fetch_count'] : '-' }}</td>
+                                    <td class="text-right">{{ (isset($topic['tweet_count']) && !empty($topic['tweet_count'])) ? $topic['tweet_count'] : '-' }}</td>
+                                    <td>{{ (isset($topic['last_tweet']) && !empty($topic['last_tweet'])) ? $topic['last_tweet']['id'] : '-' }}</td>
+                                    <td class="text-right">{{ (isset($topic['last_fetch_count']) && !empty($topic['last_fetch_count'])) ? $topic['last_fetch_count'] : '-' }}</td>
                                     <td>{{ (isset($topic['last_fetch_date']) && !empty($topic['last_fetch_date'])) ? $topic['last_fetch_date'] : '-' }}</td>
                                     <td>{{ (isset($topic['created_at']) && !empty($topic['created_at'])) ? $topic['created_at'] : '-' }}</td>
                                     <td>{{ $topic['on_queue'] ? 'Yes' : 'No' }}</td>

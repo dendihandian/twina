@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\TopicRepository;
 use App\Repositories\TopicTweetRepository;
+use Illuminate\Support\Collection;
 
 class MiningTopic implements ShouldQueue
 {
@@ -48,6 +49,9 @@ class MiningTopic implements ShouldQueue
         TopicTweetRepository $topicTweetRepository
     ) {
         Log::debug('MiningTopic@handle start');
+        Log::debug(Collection::make([['id' => 'qweqeq'], ['id' => 'dpqwie']])->keyBy('id')->toArray());
+
+        // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
 
         try {
             $topic = $topicRepository->getTopic($this->userId, $this->topicId);
@@ -70,24 +74,23 @@ class MiningTopic implements ShouldQueue
             if (count($statuses->statuses)) {
                 // TODO: find a way to append tweets (without merging with existing)
                 $existingStatuses = $topicTweetRepository->getTopicTweets($this->userId, $this->topicId);
-                $existingStatuses = (count($existingStatuses)) ? $existingStatuses : [];
+                $existingStatuses = (is_array($existingStatuses) && count($existingStatuses)) ? Collection::make($existingStatuses)->keyBy('id')->toArray() : [];
 
                 $statuses = json_decode(json_encode(array_reverse($statuses->statuses)), true);
+                $statuses = Collection::make($statuses)->keyBy('id')->toArray();
 
-                $keyMappedStatuses = [];
-                foreach ($statuses as $status) {
-                    $keyMappedStatuses[$status['id']] = $status;
-                    $lastTweet = $status['id'];
+                if ($statuses) {
+                    $lastTweet = end($statuses);
                 }
 
-                $lastFetchCount = count($keyMappedStatuses);
+                $lastFetchCount = count($statuses);
 
-                $mergedStatuses = array_merge($existingStatuses, $keyMappedStatuses);
+                // NOTE: merging two associative arrays using array_merge() will make the keys gone. So we use '+' operator instead. 
+                $mergedStatuses = $existingStatuses ? ($existingStatuses + $statuses) : $statuses;
 
                 $tweetCount = count($mergedStatuses);
 
                 $topicTweetRepository->putTopicTweets($this->userId, $this->topicId, $mergedStatuses);
-
 
                 $topicRepository->updateTopic($this->userId, $this->topicId, [
                     'on_queue' => false,

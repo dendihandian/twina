@@ -29,13 +29,13 @@ class Firebase
     public function getPublicTopics()
     {
         $response = Http::get($this->urlBuilder($this->config['paths']['public_topics']));
-        return $response->json();
+        return $response->json() ?? [];
     }
 
     public function getTopics($userId)
     {
         $response = Http::get($this->urlBuilder('/topics/users/' . $userId));
-        return $response->json();
+        return $response->json() ?? [];
     }
 
     public function getTopic($userId, $topicId)
@@ -91,13 +91,19 @@ class Firebase
 
     public function getTopicTweets($userId, $topicId)
     {
-        $response = Http::get($this->urlBuilder("/topics/users/{$userId}/{$topicId}/tweets"));
-        return $response->json();
+        // NOTE: accessing '/topics/users/{$userId}/{$topicId}/tweets' directly will cause the keys changed into index numbers.
+        // So we get the topic object first instead and take the tweets.
+        $topic = $this->getTopic($userId, $topicId);
+        return $topic['tweets'] ?? [];
     }
 
     public function putTopicTweets($userId, $topicId, $tweets)
     {
-        $response = Http::put($this->urlBuilder("/topics/users/{$userId}/{$topicId}/tweets"), $tweets);
+        // NOTE: putting associative array into '/topics/users/{$userId}/{$topicId}/tweets' directly will cause the id keys changed into index numbers.
+        // So we patch the tweets instead into the topic.
+        $response = Http::patch($this->urlBuilder("/topics/users/{$userId}/{$topicId}"), [
+            'tweets' => $tweets,
+        ]);
         return $response->json();
     }
 }

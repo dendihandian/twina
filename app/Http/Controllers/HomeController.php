@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Wrappers\Twitter;
 use App\Wrappers\Firebase;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -29,6 +31,10 @@ class HomeController extends Controller
     {
         // dd($this->firebase->getPublicTopics());
         $statuses = $this->twitter->searchTweets(['q' => 'laravel']);
+        $statuses = json_decode(json_encode(array_reverse($statuses->statuses)), true);
+        $statuses = Collection::make($statuses)->keyBy('id')->toArray();
+        Log::debug($statuses);
+        dd($statuses);
         // $array = json_decode(json_encode($statuses->statuses), true);
         dd(json_decode(json_encode($statuses->statuses), true));
         $account = $this->twitter->getAccount();

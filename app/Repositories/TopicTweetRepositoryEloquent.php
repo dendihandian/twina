@@ -49,7 +49,7 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
 
     public function putTopicTweets($userId, $topicId, $tweets)
     {
-        $tweets = $this->firebase->putTopicTweets($userId, $topicId);
+        $tweets = $this->firebase->putTopicTweets($userId, $topicId, $tweets);
         return $tweets;
     }
 }
