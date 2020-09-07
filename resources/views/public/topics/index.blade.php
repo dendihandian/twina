@@ -5,11 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="row d-flex justify-content-end">
-                <a href="{{ route('public.topics.create') }}" class="btn btn-primary mb-4">Create a topic</a>
+                <a href="{{ route('public.topics.create') }}" class="btn btn-primary mb-4">{{ __('Add a public topic') }}</a>
             </div>
             <div class="card">
                 <div class="card-header">
-                    <span>{{ __('My topics') }}</span>
+                    <span>{{ __('Public topics') }}</span>
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -49,9 +49,10 @@
                                                 @csrf
                                                 <button class="btn btn-sm btn-success">Start Mining</button>
                                             </form>
+                                        @endif
+                                        @if (isset($topic['tweets']) && !empty($topic['tweets']))
                                             <a href="{{ route('public.topics.tweets.index', ['topic' => $topicId]) }}" class="btn btn-sm btn-info text-white">See Tweets</a>
-                                        @else
-                                            <span>{{ __('On queue') }}</span>
+                                            <a href="{{ route('public.topics.analysis.index', ['topic' => $topicId]) }}" class="btn btn-sm btn-danger text-white">See Analysis</a>
                                         @endif
                                     </td>
                                 </tr>

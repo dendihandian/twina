@@ -33,6 +33,11 @@ Route::prefix('public')->name('public.')->middleware(['auth'])->group(function (
             Route::prefix('tweets')->name('tweets.')->group(function () {
                 Route::get('/', 'PublicTopicTweetController@index')->name('index');
             });
+
+            Route::prefix('analysis')->name('analysis.')->group(function () {
+                Route::get('/', 'PublicTopicController@getAnalysis')->name('index');
+                Route::post('/', 'PublicTopicController@postAnalysis')->name('store');
+            });
         });
     });
 });

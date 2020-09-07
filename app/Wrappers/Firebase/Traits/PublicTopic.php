@@ -32,6 +32,7 @@ trait PublicTopic
             'tweets' => null,
             'tweets_count' => 0,
             'on_queue' => false,
+            'on_analyze' => false,
             'created_at' => Carbon::now()->toDateTimeString(),
         ];
 

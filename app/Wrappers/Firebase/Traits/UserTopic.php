@@ -31,7 +31,8 @@ trait UserTopic
             'last_fetch_date' => 0,
             'tweets' => null,
             'tweets_count' => 0,
-            'on_queue' => false,
+            'on_queue' => false, // TODO: change to 'on_mining'
+            'on_analyze' => false,
             'created_at' => Carbon::now()->toDateTimeString(),
         ];
 

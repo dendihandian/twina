@@ -51,4 +51,16 @@ class PublicTopicController extends Controller
             dd($th);
         }
     }
+
+    public function getAnalysis($topicId)
+    {
+        $topic = $this->topicRepository->getTopic($topicId);
+        return view('public.topics.analysis', compact('topic', 'topicId'));
+    }
+
+    public function postAnalysis($topicId)
+    {
+        $this->topicRepository->analyze($topicId);
+        return redirect()->route('public.topics.analysis.index', ['topic' => $topicId]);
+    }
 }
