@@ -46,16 +46,18 @@ class MiningTopic implements ShouldQueue
         TopicTweetRepository $topicTweetRepository
     ) {
         Log::debug('MiningTopic@handle start');
+        Log::debug('User ID: ' . $this->userId);
 
         // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
 
         try {
             if ($this->userId) {
-                $topic = $topicRepository->getTopic($this->userId, $this->topicId);
+                $topic = $topicRepository->getTopic($this->topicId, $this->userId);
             } else {
                 $topic = $topicRepository->getPublicTopic($this->topicId);
             }
 
+            Log::debug('topic text: ' . $topic['text']);
 
             $param = [
                 'q' => $topic['text'],
@@ -72,10 +74,13 @@ class MiningTopic implements ShouldQueue
             $tweetCount = 0;
             $lastFetchCount = 0;
 
-            if (count($statuses->statuses)) {
+            if ($searchCount = count($statuses->statuses)) {
+
+                Log::debug('search tweets count: ' . $searchCount);
+
                 // TODO: find a way to append tweets if possible (without merging with existing)
                 if ($this->userId) {
-                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->userId, $this->topicId);
+                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId, $this->userId);
                 } else {
                     $existingStatuses = $topicTweetRepository->getPublicTopicTweets($this->topicId);
                 }

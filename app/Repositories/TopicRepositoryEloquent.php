@@ -88,7 +88,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
         if ($userId) {
             $this->firebase->updateTopic($userId, $topicId, $param);
-            MiningTopic::dispatch($userId, $topicId);
+            MiningTopic::dispatch($topicId, $userId);
         } else {
             $this->firebase->updatePublicTopic($topicId, $param);
             MiningTopic::dispatch($topicId);
