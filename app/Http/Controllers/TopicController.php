@@ -35,7 +35,7 @@ class TopicController extends Controller
     public function store(TopicRequest $request)
     {
         try {
-            $this->repository->createTopic(Auth::user()->id, $request->only('name'));
+            $this->repository->createTopic($request->only('name'), Auth::user()->id);
             return redirect()->route('topics.index');
         } catch (\Throwable $th) {
             dd($th);
@@ -46,9 +46,9 @@ class TopicController extends Controller
     {
         try {
             // DB::beginTransaction();
-            $topic = $this->repository->getTopic(Auth::user()->id, $topicId);
+            $topic = $this->repository->getTopic($topicId, Auth::user()->id);
             if ($topic && !$topic['on_queue']) {
-                $this->repository->startMining(Auth::user()->id, $topicId);
+                $this->repository->startMining($topicId, Auth::user()->id);
             }
 
             // DB::commit();

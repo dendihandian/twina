@@ -7,11 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Entities\Topic;
-use App\Entities\Tweet;
 use App\Wrappers\Twitter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\TopicRepository;
 use App\Repositories\TopicTweetRepository;
@@ -31,11 +28,11 @@ class MiningTopic implements ShouldQueue
      * @return void
      */
     public function __construct(
-        $userId,
-        $topicId
+        $topicId,
+        $userId = null
     ) {
-        $this->userId = $userId;
         $this->topicId = $topicId;
+        $this->userId = $userId;
         $this->twitter = new Twitter;
     }
 
@@ -49,12 +46,16 @@ class MiningTopic implements ShouldQueue
         TopicTweetRepository $topicTweetRepository
     ) {
         Log::debug('MiningTopic@handle start');
-        Log::debug(Collection::make([['id' => 'qweqeq'], ['id' => 'dpqwie']])->keyBy('id')->toArray());
 
         // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
 
         try {
-            $topic = $topicRepository->getTopic($this->userId, $this->topicId);
+            if ($this->userId) {
+                $topic = $topicRepository->getTopic($this->userId, $this->topicId);
+            } else {
+                $topic = $topicRepository->getPublicTopic($this->topicId);
+            }
+
 
             $param = [
                 'q' => $topic['text'],
@@ -72,8 +73,13 @@ class MiningTopic implements ShouldQueue
             $lastFetchCount = 0;
 
             if (count($statuses->statuses)) {
-                // TODO: find a way to append tweets (without merging with existing)
-                $existingStatuses = $topicTweetRepository->getTopicTweets($this->userId, $this->topicId);
+                // TODO: find a way to append tweets if possible (without merging with existing)
+                if ($this->userId) {
+                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->userId, $this->topicId);
+                } else {
+                    $existingStatuses = $topicTweetRepository->getPublicTopicTweets($this->topicId);
+                }
+
                 $existingStatuses = (is_array($existingStatuses) && count($existingStatuses)) ? Collection::make($existingStatuses)->keyBy('id')->toArray() : [];
 
                 $statuses = json_decode(json_encode(array_reverse($statuses->statuses)), true);
@@ -90,24 +96,32 @@ class MiningTopic implements ShouldQueue
 
                 $tweetCount = count($mergedStatuses);
 
-                $topicTweetRepository->putTopicTweets($this->userId, $this->topicId, $mergedStatuses);
-
-                $topicRepository->updateTopic($this->userId, $this->topicId, [
+                $updateParams = [
                     'last_fetch_tweet' => $lastTweet,
                     'last_fetch_count' => $lastFetchCount,
                     'last_fetch_date' => Carbon::now()->toDateTimeString(),
                     'tweets_count' => $tweetCount,
                     'on_queue' => false,
-                ]);
-            }
+                ];
 
-            // DB::commit();
+                if ($this->userId) {
+                    $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses, $this->userId);
+                    $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
+                } else {
+                    $topicTweetRepository->putPublicTopicTweets($this->topicId, $mergedStatuses);
+                    $topicRepository->updatePublicTopic($this->topicId, $updateParams);
+                }
+            }
         } catch (\Throwable $th) {
-            // DB::rollBack();
             Log::error($th);
-            $topicRepository->updateTopic($this->userId, $this->topicId, [
-                'on_queue' => false,
-            ]);
+
+            $updateParams = ['on_queue' => false];
+
+            if ($this->userId) {
+                $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
+            } else {
+                $topicRepository->updatePublicTopic($this->topicId, $updateParams);
+            }
         }
 
         Log::debug('MiningTopic@handle end');

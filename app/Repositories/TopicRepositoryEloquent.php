@@ -8,7 +8,7 @@ use App\Repositories\TopicRepository;
 use App\Entities\Topic;
 use App\Validators\TopicValidator;
 use App\Jobs\MiningTopic;
-use App\Wrappers\Firebase;
+use App\Wrappers\Firebase\Firebase;
 
 /**
  * Class TopicRepositoryEloquent.
@@ -42,34 +42,56 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function getTopics($userId)
+    public function getTopics($userId = null)
     {
-        return $this->firebase->getTopics($userId);
+        if ($userId) {
+            return $this->firebase->getTopics($userId);
+        } else {
+            return $this->firebase->getPublicTopics();
+        }
     }
 
-    public function getTopic($userId, $topicId)
+    public function getTopic($topicId, $userId = null)
     {
-        return $this->firebase->getTopic($userId, $topicId);
+        if ($userId) {
+            return $this->firebase->getTopic($userId, $topicId);
+        } else {
+            return $this->firebase->getPublicTopic($topicId);
+        }
     }
 
-    public function createTopic($userId, $param)
+    public function createTopic($param, $userId = null)
     {
-        $this->firebase->addTopic($userId, [
+        $param = [
             'text' => $param['name'],
-        ]);
+        ];
+
+        if ($userId) {
+            $this->firebase->addTopic($userId, $param);
+        } else {
+            $this->firebase->addPublicTopic($param);
+        }
     }
 
-    public function updateTopic($userId, $topicId, $param)
+    public function updateTopic($topicId, $param, $userId = null)
     {
-        $this->firebase->updateTopic($userId, $topicId, $param);
+        if ($userId) {
+            $this->firebase->updateTopic($userId, $topicId, $param);
+        } else {
+            $this->firebase->updatePublicTopic($topicId, $param);
+        }
     }
 
-    public function startMining($userId, $topicId)
+    public function startMining($topicId, $userId = null)
     {
-        $this->firebase->updateTopic($userId, $topicId, [
-            'on_queue' => true
-        ]);
+        $param = ['on_queue' => true];
 
-        MiningTopic::dispatch($userId, $topicId);
+        if ($userId) {
+            $this->firebase->updateTopic($userId, $topicId, $param);
+            MiningTopic::dispatch($userId, $topicId);
+        } else {
+            $this->firebase->updatePublicTopic($topicId, $param);
+            MiningTopic::dispatch($topicId);
+        }
     }
 }

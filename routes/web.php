@@ -21,6 +21,22 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::prefix('public')->name('public.')->middleware(['auth'])->group(function () {
+    Route::prefix('topics')->name('topics.')->group(function () {
+        Route::get('/', 'PublicTopicController@index')->name('index');
+        Route::post('/', 'PublicTopicController@store')->name('store');
+        Route::get('/create', 'PublicTopicController@create')->name('create');
+
+        Route::prefix('{topic}')->group(function () {
+            Route::post('/mining', 'PublicTopicController@mining')->name('mining');
+
+            Route::prefix('tweets')->name('tweets.')->group(function () {
+                Route::get('/', 'PublicTopicTweetController@index')->name('index');
+            });
+        });
+    });
+});
+
 Route::prefix('topics')->name('topics.')->middleware(['auth'])->group(function () {
     Route::get('/', 'TopicController@index')->name('index');
     Route::post('/', 'TopicController@store')->name('store');

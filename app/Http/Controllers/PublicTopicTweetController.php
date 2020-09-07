@@ -7,20 +7,18 @@ use App\Repositories\TopicTweetRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TopicTweetController extends Controller
+class PublicTopicTweetController extends Controller
 {
     protected $topicRepository;
-    protected $topicTweetRepository;
 
-    public function __construct(TopicRepository $topicRepository, TopicTweetRepository $topicTweetRepository)
+    public function __construct(TopicRepository $topicRepository)
     {
         $this->topicRepository = $topicRepository;
-        $this->topicTweetRepository = $topicTweetRepository;
     }
 
     public function index($topicId)
     {
-        $topic = $this->topicRepository->getTopic($topicId, Auth::user()->id);
+        $topic = $this->topicRepository->getTopic($topicId);
         $tweets = $topic['tweets'] ?? [];
         return view('topics.tweets.index', compact('topic', 'tweets'));
     }

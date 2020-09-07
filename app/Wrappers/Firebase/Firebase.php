@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Wrappers;
+namespace App\Wrappers\Firebase;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Wrappers\Firebase\Traits\PublicTopic;
 
 class Firebase
 {
+    use PublicTopic;
+
     protected $config;
     protected $http;
 
@@ -26,12 +29,6 @@ class Firebase
         return $url;
     }
 
-    public function getPublicTopics()
-    {
-        $response = Http::get($this->urlBuilder($this->config['paths']['public_topics']));
-        return $response->json() ?? [];
-    }
-
     public function getTopics($userId)
     {
         $response = Http::get($this->urlBuilder('/topics/users/' . $userId));
@@ -41,25 +38,6 @@ class Firebase
     public function getTopic($userId, $topicId)
     {
         $response = Http::get($this->urlBuilder("/topics/users/{$userId}/{$topicId}"));
-        return $response->json();
-    }
-
-    public function addPublicTopic($param = [])
-    {
-        $defaultParam = [
-            'text' => '',
-            'last_fetch_tweet' => '',
-            'last_fetch_count' => 0,
-            'last_fetch_date' => 0,
-            'tweets' => null,
-            'tweets_count' => 0,
-            'on_queue' => false,
-            'created_at' => Carbon::now()->toDateTimeString(),
-        ];
-
-        $param = array_merge($defaultParam, $param);
-
-        $response = Http::post($this->urlBuilder($this->config['paths']['public_topics']), $param);
         return $response->json();
     }
 

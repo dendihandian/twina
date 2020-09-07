@@ -7,7 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicTweetRepository;
 use App\Entities\TopicTweet;
 use App\Validators\TopicTweetValidator;
-use App\Wrappers\Firebase;
+use App\Wrappers\Firebase\Firebase;
 
 /**
  * Class TopicTweetRepositoryEloquent.
@@ -41,15 +41,25 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function getTopicTweets($userId, $topicId)
+    public function getTopicTweets($topicId, $userId = null)
     {
-        $tweets = $this->firebase->getTopicTweets($userId, $topicId);
+        if ($userId) {
+            $tweets = $this->firebase->getTopicTweets($userId, $topicId);
+        } else {
+            $tweets = $this->firebase->getPublicTopicTweets($topicId);
+        }
+
         return $tweets;
     }
 
-    public function putTopicTweets($userId, $topicId, $tweets)
+    public function putTopicTweets($topicId, $tweets, $userId = null)
     {
-        $tweets = $this->firebase->putTopicTweets($userId, $topicId, $tweets);
+        if ($userId) {
+            $tweets = $this->firebase->putTopicTweets($userId, $topicId, $tweets);
+        } else {
+            $tweets = $this->firebase->putPublicTopicTweets($topicId, $tweets);
+        }
+
         return $tweets;
     }
 }
