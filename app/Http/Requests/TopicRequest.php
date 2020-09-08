@@ -25,7 +25,8 @@ class TopicRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:topics,name',
+            'name' => 'required',
+            'result_type' => 'required',
         ];
     }
 

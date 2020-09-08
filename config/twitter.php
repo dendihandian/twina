@@ -9,7 +9,7 @@ return [
     'search' => [
         'default' => [
             'result_type' => env('TWITTER_SEARCH_DEFAULT_RESULT_TYPE', 'recent'),
-            'count' => env('TWITTER_SEARCH_DEFAULT_COUNT', 50),
+            'count' => env('TWITTER_SEARCH_DEFAULT_COUNT', 500),
         ],
     ]
 ];

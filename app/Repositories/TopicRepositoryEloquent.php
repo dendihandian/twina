@@ -65,6 +65,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     {
         $param = [
             'text' => $param['name'],
+            'result_type' => $param['result_type'],
         ];
 
         if ($userId) {

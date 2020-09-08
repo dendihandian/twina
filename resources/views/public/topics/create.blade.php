@@ -12,7 +12,7 @@
                         @csrf
                         <div class="form-row">
                             <div class="col-md-10">
-                            <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{{ __('Enter any topic name') }}">
+                                <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{{ __('Enter any topic name') }}">
                                 @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -21,6 +21,20 @@
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary form-control">{{ __('Save')}}</button>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="col-md-12">
+                                @foreach ($resultTypes as $index => $resultType)
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="result_type" id="{{ $resultType['value'] . '_input' }}" value="{{ $resultType['value'] }}"
+                                        @if ($index === 0)
+                                            checked
+                                        @endif
+                                        >
+                                        <label class="form-check-label" for="{{ $resultType['value'] . '_input' }}">{{ $resultType['label'] }}</label>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </form>

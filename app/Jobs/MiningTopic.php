@@ -61,18 +61,19 @@ class MiningTopic implements ShouldQueue
 
             $param = [
                 'q' => $topic['text'],
+                'result_type' => $topic['result_type'] ?? 'recent',
             ];
 
             $lastTweet = (isset($this->topic['last_fetch_tweet']) && !empty($this->topic['last_fetch_tweet'])) ? $this->topic['last_fetch_tweet'] : null;
 
             if ($lastTweet) {
-                $param['since_id'] = $lastTweet;
+                $param['since_id'] = $lastTweet['id'];
             }
 
             $statuses = $this->twitter->searchTweets($param);
 
             $tweetCount = 0;
-            $lastFetchCount = 0;
+            $lastFetchCount = $topic['last_fetch_count'] ?? 0;
 
             if ($searchCount = count($statuses->statuses)) {
 
@@ -100,22 +101,22 @@ class MiningTopic implements ShouldQueue
                 $mergedStatuses = $existingStatuses ? ($existingStatuses + $statuses) : $statuses;
 
                 $tweetCount = count($mergedStatuses);
+            }
 
-                $updateParams = [
-                    'last_fetch_tweet' => $lastTweet,
-                    'last_fetch_count' => $lastFetchCount,
-                    'last_fetch_date' => Carbon::now()->toDateTimeString(),
-                    'tweets_count' => $tweetCount,
-                    'on_queue' => false,
-                ];
+            $updateParams = [
+                'last_fetch_tweet' => $lastTweet,
+                'last_fetch_count' => $lastFetchCount,
+                'last_fetch_date' => Carbon::now()->toDateTimeString(),
+                'tweets_count' => $tweetCount,
+                'on_queue' => false,
+            ];
 
-                if ($this->userId) {
-                    $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses, $this->userId);
-                    $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
-                } else {
-                    $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses);
-                    $topicRepository->updateTopic($this->topicId, $updateParams);
-                }
+            if ($this->userId) {
+                $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses, $this->userId);
+                $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
+            } else {
+                $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses);
+                $topicRepository->updateTopic($this->topicId, $updateParams);
             }
         } catch (\Throwable $th) {
             Log::error($th);

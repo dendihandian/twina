@@ -25,7 +25,7 @@
                             @csrf
                             <button type="submit" class="btn btn-primary form-control">Analyze</button>
                         </form>
-                        <button class="btn btn-info form-control mt-2 text-white">{{ __('Back to list') }}</button>
+                        <a href="{{ route('public.topics.index', ['topic' => $topicId]) }}" class="btn btn-info form-control mt-2 text-white">{{ __('Back to list') }}</a>
                     </div>
                 </div>
             </div>

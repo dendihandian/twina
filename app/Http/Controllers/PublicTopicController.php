@@ -26,13 +26,27 @@ class PublicTopicController extends Controller
 
     public function create()
     {
-        return view('public.topics.create');
+        $resultTypes = [
+            [
+                'label' => 'Recent',
+                'value' => 'recent',
+            ],
+            [
+                'label' => 'Popular',
+                'value' => 'popular',
+            ],
+            [
+                'label' => 'Mixed',
+                'value' => 'mixed',
+            ],
+        ];
+        return view('public.topics.create', compact('resultTypes'));
     }
 
     public function store(TopicRequest $request)
     {
         try {
-            $this->topicRepository->createTopic($request->only('name'));
+            $this->topicRepository->createTopic($request->only(['name', 'result_type']));
             return redirect()->route('public.topics.index');
         } catch (\Throwable $th) {
             dd($th);

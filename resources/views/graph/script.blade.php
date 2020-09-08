@@ -70,22 +70,24 @@
         //     .attr("width", imageRes);
 
 
-    var images = node.append("svg:image") // 'svg:image' makes the node draggable
+    var images = node.append("svg:image")
             .attr("xlink:href",  function(d) { return d.img;})
             .attr("x", function(d) { return -(imageRes / 2);})
             .attr("y", function(d) { return -(imageRes / 2);})
             // .attr("style", "border-radius: 50%;")
             .style("border-radius", '50%')
+            .style("pointer-events", 'none')
+            .style("user-select", 'none')
             .attr("height", imageRes)
             .attr("width", imageRes);
 
-    var lables = node
-        .append("text")
-        .text(function (d) {
-            return d.id;
-        })
-        .attr("x", 6)
-        .attr("y", 3);
+    // var lables = node
+    //     .append("text")
+    //     .text(function (d) {
+    //         return d.id;
+    //     })
+    //     .attr("x", 6)
+    //     .attr("y", 3);
 
     node.append("title").text(function (d) {
         return d.id;
