@@ -55,12 +55,22 @@ class PublicTopicController extends Controller
     public function getAnalysis($topicId)
     {
         $topic = $this->topicRepository->getTopic($topicId);
-        return view('public.topics.analysis', compact('topic', 'topicId'));
+        $graph = $topic['graph'] ?? null;
+
+        if ($graph) {
+            $graph = [
+                'nodes' => array_values($graph['nodes']),
+                'links' => array_values($graph['edges']),
+            ];
+        }
+
+
+        return view('public.topics.analysis', compact('topic', 'topicId', 'graph'));
     }
 
     public function postAnalysis($topicId)
     {
-        $this->topicRepository->analyze($topicId);
+        $this->topicRepository->startAnalyzing($topicId);
         return redirect()->route('public.topics.analysis.index', ['topic' => $topicId]);
     }
 }

@@ -23,8 +23,9 @@
                     <div class="card-body">
                         <form action="{{ route('public.topics.analysis.store', ['topic' => $topicId]) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Analyze</button>
+                            <button type="submit" class="btn btn-primary form-control">Analyze</button>
                         </form>
+                        <button class="btn btn-info form-control mt-2 text-white">{{ __('Back to list') }}</button>
                     </div>
                 </div>
             </div>
@@ -33,5 +34,9 @@
 @endsection
 
 @section('script')
+    <script>
+        var graph = {!! json_encode($graph ?? [], JSON_HEX_TAG) !!};
+        console.log('graph', graph);
+    </script>
     @include('graph.script')
 @endsection

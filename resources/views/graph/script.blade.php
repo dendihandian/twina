@@ -1,5 +1,15 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
+
+    if (typeof(graph) === 'undefined') {
+        var graph = {
+            'nodes': [],
+            'links': [],
+        } 
+    }
+
+    console.log('graph', graph);
+
     var svg = d3.select("svg");
     var width = svg.attr("width");
     var height = svg.attr("height");
@@ -9,21 +19,15 @@
     var simulation = d3
         .forceSimulation()
         .force(
-        "link",
-        d3.forceLink().id(function (d) {
-            return d.id;
-        })
+            "link",
+            d3.forceLink().id(function (d) {
+                return d.id;
+            })
         )
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
 
-    var url =
-        "https://gist.githubusercontent.com/dendihandian/7c2e187a5a71ba3011c767d97f95eb8f/raw/e0cea3a8959e2150e40659ca5ce32fff36a96da0/miserables.json";
-
-    d3.json(url, function (error, graph) {
-        if (error) throw error;
-
-        var link = svg
+    var link = svg
         .append("g")
         .attr("class", "links")
         .selectAll("line")
@@ -34,7 +38,7 @@
             return Math.sqrt(d.value);
         });
 
-        var node = svg
+    var node = svg
         .append("g")
         .attr("class", "nodes")
         .selectAll("g")
@@ -42,9 +46,10 @@
         .enter()
         .append("g");
 
-        var circles = node
+    var imageRes = 20;
+    var circles = node
         .append("circle")
-        .attr("r", 5)
+        .attr("r", 15) // radius or circle size
         .attr("fill", function (d) {
             return color(d.group);
         })
@@ -55,8 +60,26 @@
             .on("drag", dragged)
             .on("end", dragended)
         );
+        // .append("image")
+        //     .attr("xlink:href",  function(d) { return d.img;})
+        //     .attr("x", function(d) { return -(imageRes / 2);})
+        //     .attr("y", function(d) { return -(imageRes / 2);})
+        //     // .attr("style", "border-radius: 50%;")
+        //     .style("border-radius", '50%')
+        //     .attr("height", imageRes)
+        //     .attr("width", imageRes);
 
-        var lables = node
+
+    var images = node.append("svg:image") // 'svg:image' makes the node draggable
+            .attr("xlink:href",  function(d) { return d.img;})
+            .attr("x", function(d) { return -(imageRes / 2);})
+            .attr("y", function(d) { return -(imageRes / 2);})
+            // .attr("style", "border-radius: 50%;")
+            .style("border-radius", '50%')
+            .attr("height", imageRes)
+            .attr("width", imageRes);
+
+    var lables = node
         .append("text")
         .text(function (d) {
             return d.id;
@@ -64,15 +87,15 @@
         .attr("x", 6)
         .attr("y", 3);
 
-        node.append("title").text(function (d) {
+    node.append("title").text(function (d) {
         return d.id;
-        });
+    });
 
-        simulation.nodes(graph.nodes).on("tick", ticked);
+    simulation.nodes(graph.nodes).on("tick", ticked);
 
-        simulation.force("link").links(graph.links);
+    simulation.force("link").links(graph.links);
 
-        function ticked() {
+    function ticked() {
         link
             .attr("x1", function (d) {
             return d.source.x;
@@ -90,8 +113,7 @@
         node.attr("transform", function (d) {
             return "translate(" + d.x + "," + d.y + ")";
         });
-        }
-    });
+    }
 
     function dragstarted(d) {
         if (!d3.event.active) simulation.alphaTarget(0.3).restart();

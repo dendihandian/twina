@@ -16,5 +16,5 @@ interface TopicRepository extends RepositoryInterface
     public function createTopic($param, $userId = null);
     public function updateTopic($topicId, $param, $userId = null);
     public function startMining($topicId, $userId = null);
-    public function analyze($topicId, $userId = null);
+    public function startAnalyzing($topicId, $userId = null);
 }

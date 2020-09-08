@@ -89,78 +89,23 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
         if ($userId) {
             $this->firebase->updateTopic($userId, $topicId, $param);
-            MiningTopic::dispatch($topicId, $userId);
         } else {
             $this->firebase->updatePublicTopic($topicId, $param);
-            MiningTopic::dispatch($topicId);
         }
+
+        MiningTopic::dispatch($topicId, $userId);
     }
 
-    public function analyze($topicId, $userId = null)
+    public function startAnalyzing($topicId, $userId = null)
     {
-        $topic = $this->getTopic($topicId, $userId);
-        $nodes = [];
-        $edges = [];
+        $param = ['on_analyze' => true];
 
-        foreach ($topic['tweets'] as $tweetId => $tweet) {
-            $userScreenName = $tweet['user']['screen_name'];
-
-            $nodes[$userScreenName] = [
-                'id' => $userScreenName,
-                'group' => rand(1, 5), // TODO: you know...
-                // TODO: profile, link profile, etc. here
-            ];
-
-
-            // check for in reply
-            $inReplyScreenName = null;
-            if (isset($tweet['in_reply_to_screen_name']) && !empty($tweet['in_reply_to_screen_name'])) {
-                $inReplyScreenName = $tweet['in_reply_to_screen_name'];
-                if (isset($edges[$userScreenName . '@' . $inReplyScreenName])) {
-                    $edges[$userScreenName . '@' . $inReplyScreenName]['value'] += 1;
-                    $edges[$userScreenName . '@' . $inReplyScreenName]['text'] = $tweet['text'];
-                    $edges[$userScreenName . '@' . $inReplyScreenName]['tweet_id'] = $tweet['id'];
-                } else if (isset($edges[$inReplyScreenName . '@' . $userScreenName])) {
-                    $edges[$inReplyScreenName . '@' . $userScreenName]['value'] += 1;
-                    $edges[$inReplyScreenName . '@' . $userScreenName]['text'] = $tweet['text'];
-                    $edges[$inReplyScreenName . '@' . $userScreenName]['tweet_id'] = $tweet['id'];
-                } else {
-                    $edges[$userScreenName . '@' . $inReplyScreenName] = [
-                        'source' => $userScreenName,
-                        'target' => $inReplyScreenName,
-                        'value' => 1,
-                        'text' => $tweet['text'],
-                        'tweet_id' => $tweet['id'],
-                    ];
-                }
-            }
-
-            // check for mentions
-            if (isset($tweet['entities']['user_mentions']) && !empty($tweet['entities']['user_mentions'])) {
-                foreach ($tweet['entities']['user_mentions'] as $mention) {
-                    if ($mention['screen_name'] != $inReplyScreenName) {
-                        if (isset($edges[$userScreenName . '@' . $mention['screen_name']])) {
-                            $edges[$userScreenName . '@' . $mention['screen_name']]['value'] += 1;
-                            $edges[$userScreenName . '@' . $mention['screen_name']]['text'] = $tweet['text'];
-                            $edges[$userScreenName . '@' . $mention['screen_name']]['tweet_id'] = $tweet['id'];
-                        } else if (isset($edges[$mention['screen_name'] . '@' . $userScreenName])) {
-                            $edges[$mention['screen_name'] . '@' . $userScreenName]['value'] += 1;
-                            $edges[$mention['screen_name'] . '@' . $userScreenName]['text'] = $tweet['text'];
-                            $edges[$mention['screen_name'] . '@' . $userScreenName]['tweet_id'] = $tweet['id'];
-                        } else {
-                            $edges[$userScreenName . '@' . $mention['screen_name']] = [
-                                'source' => $userScreenName,
-                                'target' => $mention['screen_name'],
-                                'value' => 1,
-                                'text' => $tweet['text'],
-                                'tweet_id' => $tweet['id'],
-                            ];
-                        }
-                    }
-                }
-            }
+        if ($userId) {
+            $this->firebase->updateTopic($userId, $topicId, $param);
+        } else {
+            $this->firebase->updatePublicTopic($topicId, $param);
         }
 
-        dd($topic['tweets'], $nodes, $edges);
+        AnalyzeTopic::dispatch($topicId, $userId);
     }
 }
