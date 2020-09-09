@@ -1,3 +1,7 @@
+@php
+    $publicPath = isset($isPub) && !empty($isPub) ? 'public.' : '';
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -5,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="row d-flex justify-content-start">
-                <a href="{{ route('topics.index') }}" class="btn btn-primary mb-4">{{ __('Back to list') }}</a>
+                <a href="{{ route($publicPath . 'topics.index') }}" class="btn btn-primary mb-4">{{ __('Back to list') }}</a>
             </div>
             <div class="card">
                 <div class="card-header">

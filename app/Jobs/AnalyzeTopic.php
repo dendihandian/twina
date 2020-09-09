@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Repositories\TopicRepository;
+use App\Repositories\PeopleRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class AnalyzeTopic implements ShouldQueue
 {
@@ -33,7 +35,7 @@ class AnalyzeTopic implements ShouldQueue
      *
      * @return void
      */
-    public function handle(TopicRepository $topicRepository)
+    public function handle(TopicRepository $topicRepository, PeopleRepository $peopleRepository)
     {
         Log::debug('AnalyzeTopic@handle start');
 
@@ -117,6 +119,38 @@ class AnalyzeTopic implements ShouldQueue
                 $edges = collect($edges)->filter(function ($edge) use ($nodesKeys) {
                     return in_array($edge['source'], $nodesKeys) && in_array($edge['target'], $nodesKeys);
                 })->toArray();
+            }
+
+            if (isset($nodes) && !empty($nodes)) {
+
+                $oldNodes = $nodes;
+                $newNodes = [];
+
+                Log::debug([
+                    'oldNodesCount' => count($oldNodes)
+                ]);
+
+                $screenNamesChunk = Collection::make($oldNodes)->keys()->chunk(100);
+
+                foreach ($screenNamesChunk as $screenNames) {
+                    $peopleObjects = $peopleRepository->getPeoplesByScreenNames($screenNames->toArray());
+                    if ($peopleObjects) {
+                        foreach ($peopleObjects as $peopleObject) {
+                            $newNodes[$peopleObject->screen_name] = [
+                                'id' => $oldNodes[$peopleObject->screen_name]['id'],
+                                'group' => $oldNodes[$peopleObject->screen_name]['group'],
+                                'img' => $peopleObject->profile_image_url,
+                                'verified' => $peopleObject->verified,
+                            ];
+                        }
+                    }
+                }
+
+                Log::debug([
+                    'newNodesCount' => count($newNodes)
+                ]);
+
+                $nodes = $newNodes;
             }
 
             if ($nodes || $edges) {

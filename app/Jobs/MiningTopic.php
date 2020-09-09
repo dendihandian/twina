@@ -45,8 +45,8 @@ class MiningTopic implements ShouldQueue
         TopicRepository $topicRepository,
         TopicTweetRepository $topicTweetRepository
     ) {
-        Log::debug('MiningTopic@handle start');
-        Log::debug('User ID: ' . $this->userId);
+        Log::info('MiningTopic@handle start');
+        Log::debug(['topicId' => $this->topicId, 'userId' => $this->userId]);
 
         // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
 
@@ -57,7 +57,9 @@ class MiningTopic implements ShouldQueue
                 $topic = $topicRepository->getTopic($this->topicId);
             }
 
-            Log::debug('topic text: ' . $topic['text']);
+            Log::debug([
+                'topic' => $topic
+            ]);
 
             $param = [
                 'q' => $topic['text'],
@@ -130,6 +132,6 @@ class MiningTopic implements ShouldQueue
             }
         }
 
-        Log::debug('MiningTopic@handle end');
+        Log::info('MiningTopic@handle end');
     }
 }

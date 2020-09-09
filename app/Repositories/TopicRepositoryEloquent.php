@@ -107,6 +107,11 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         }
     }
 
+    public function deleteTopic($topicId, $userId = null)
+    {
+        $this->firebase->deleteTopic($topicId, $userId);
+    }
+
     public function startMining($topicId, $userId = null)
     {
         $param = ['on_queue' => true];

@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\TopicRequest;
+use Illuminate\Http\Request;
 use App\Repositories\TopicRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
-// use Illuminate\Database\Eloquent\Collection;
 
 class TopicController extends Controller
 {
@@ -23,22 +20,42 @@ class TopicController extends Controller
         $this->topicRepository = $topicRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $topics = $this->topicRepository->getTopics(Auth::user()->id);
-        return view('topics.index', compact('topics'));
+        $isPub = $request->has('isPub');
+        $topics = $this->topicRepository->getTopics($isPub ? null : Auth::user()->id);
+        return view('topics.index', compact('isPub', 'topics'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('topics.create');
+        $isPub = $request->has('isPub');
+        $resultTypes = [
+            [
+                'label' => 'Recent',
+                'value' => 'recent',
+            ],
+            [
+                'label' => 'Popular',
+                'value' => 'popular',
+            ],
+            [
+                'label' => 'Mixed',
+                'value' => 'mixed',
+            ],
+        ];
+        return view('topics.create', compact('isPub', 'resultTypes'));
     }
 
     public function store(TopicRequest $request)
     {
+        $isPub = $request->has('isPub');
         try {
-            $this->topicRepository->createTopic($request->only('name'), Auth::user()->id);
-            return redirect()->route('topics.index');
+            $this->topicRepository->createTopic(
+                $request->only(['name', 'result_type']),
+                $isPub ? null : Auth::user()->id
+            );
+            return redirect()->route(($isPub ? 'public.' : '') . 'topics.index');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -46,19 +63,74 @@ class TopicController extends Controller
 
     public function mining(Request $request, $topicId)
     {
+        $isPub = $request->has('isPub');
         try {
-            // DB::beginTransaction();
-            $topic = $this->topicRepository->getTopic($topicId, Auth::user()->id);
+            $topic = $this->topicRepository->getTopic(
+                $topicId,
+                $isPub ? null : Auth::user()->id
+            );
             if ($topic && !$topic['on_queue']) {
-                $this->topicRepository->startMining($topicId, Auth::user()->id);
+                $this->topicRepository->startMining($topicId);
             }
-
-            // DB::commit();
-
             return redirect()->back();
         } catch (\Throwable $th) {
-            // DB::rollBack();
             dd($th);
+        }
+    }
+
+    public function getAnalysis(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        $topic = $this->topicRepository->getTopic(
+            $topicId,
+            $isPub ? null : Auth::user()->id
+        );
+        $graph = $topic['graph'] ?? null;
+
+        if ($graph) {
+            $graph = [
+                'nodes' => array_values($graph['nodes']),
+                'links' => array_values($graph['edges']),
+            ];
+        }
+
+        return view('topics.analysis', compact('isPub', 'topic', 'topicId', 'graph'));
+    }
+
+    public function postAnalysis(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        $this->topicRepository->startAnalyzing(
+            $topicId,
+            $isPub ? null : Auth::user()->id
+        );
+        return redirect()->route(($isPub ? 'public.' : '') . 'topics.analysis.index', ['topic' => $topicId]);
+    }
+
+    public function postComplementGraph(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        $this->topicRepository->startComplementingGraph(
+            $topicId,
+            $isPub ? null : Auth::user()->id
+        );
+        return redirect()->route(($isPub ? 'public.' : '') . 'topics.analysis.index', ['topic' => $topicId]);
+    }
+
+    public function setSelectedTopic(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        try {
+            $this->topicRepository->setSelectedTopic(
+                $topicId,
+                $isPub ? null : Auth::user()->id
+            );
+            $request->session()->flash('success', 'The topic was selected successfully');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Log::error($th);
+            $request->session()->flash('error', $this->errorMessage);
+            return redirect()->back();
         }
     }
 }
