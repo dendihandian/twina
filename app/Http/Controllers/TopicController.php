@@ -70,7 +70,10 @@ class TopicController extends Controller
                 $isPub ? null : Auth::user()->id
             );
             if ($topic && !$topic['on_queue']) {
-                $this->topicRepository->startMining($topicId);
+                $this->topicRepository->startMining(
+                    $topicId,
+                    $isPub ? null : Auth::user()->id
+                );
             }
             return redirect()->back();
         } catch (\Throwable $th) {
