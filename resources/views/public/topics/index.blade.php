@@ -4,7 +4,8 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="row d-flex justify-content-end">
+            <div class="row d-flex justify-content-between">
+                <a href="{{ route('home') }}" class="btn btn-info text-white mb-4">{{ __('Back to home') }}</a>
                 <a href="{{ route('public.topics.create') }}" class="btn btn-primary mb-4">{{ __('Add a public topic') }}</a>
             </div>
             <div class="card">
@@ -21,7 +22,7 @@
                                 <th scope="col" colspan="3" class="align-middle text-center">Last Fetch</th>
                                 <th scope="col" rowspan="2" class="align-middle">Created At</th>
                                 <th scope="col" rowspan="2" class="align-middle text-center">On Queue</th>
-                                <th scope="col" rowspan="2" class="align-middle text-center" width="20%">Actions</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center" width="5%">Actions</th>
                             </tr>
                             <tr>
                                 <th scope="col" class="align-middle text-center">Tweet</th>
@@ -36,7 +37,7 @@
                                     <th scope="row" class="align-middle">{{ $topic['result_type'] ?? 'recent'}}</th>
                                     <td class="align-middle text-right">{{ (isset($topic['tweets_count']) && !empty($topic['tweets_count'])) ? $topic['tweets_count'] : '-' }}</td>
                                     <td class="align-middle text-center">
-                                        @if ($topic['last_fetch_tweet'])
+                                        @if (isset($topic['last_fetch_tweet']) && !empty($topic['last_fetch_tweet']))
                                             <a href="{{ 'https://twitter.com/' . $topic['last_fetch_tweet']['user']['screen_name'] . '/status/' . $topic['last_fetch_tweet']['id'] }}" target="_blank">
                                                 {{ (isset($topic['last_fetch_tweet']) && !empty($topic['last_fetch_tweet'])) ? $topic['last_fetch_tweet']['id'] : '-' }}
                                             </a>
@@ -47,17 +48,23 @@
                                     <td class="align-middle text-right">{{ (isset($topic['last_fetch_count']) && !empty($topic['last_fetch_count'])) ? $topic['last_fetch_count'] : '-' }}</td>
                                     <td class="align-middle">{{ (isset($topic['last_fetch_date']) && !empty($topic['last_fetch_date'])) ? $topic['last_fetch_date'] : '-' }}</td>
                                     <td class="align-middle">{{ (isset($topic['created_at']) && !empty($topic['created_at'])) ? $topic['created_at'] : '-' }}</td>
-                                    <td class="align-middle text-center">{{ $topic['on_queue'] ? 'Yes' : 'No' }}</td>
-                                    <td class="d-flex align-items-center justify-content-between">
-                                        @if (!$topic['on_queue'])
-                                            <form action="{{ route('public.topics.mining', ['topic' => $topicId]) }}" method="POST">
-                                                @csrf
-                                                <button class="btn btn-sm btn-success">Start Mining</button>
-                                            </form>
+                                    <td class="align-middle text-center">{{ (isset($topic['on_queue']) && !empty($topic['on_queue'])) ? 'Yes' : 'No' }}</td>
+                                    <td class="d-flex align-items-center justify-content-center">
+                                        @if (!(isset($topic['on_queue']) && !empty($topic['on_queue'])))
+                                            <div class="p-1">
+                                                <form action="{{ route('public.topics.mining', ['topic' => $topicId]) }}" method="POST">
+                                                    @csrf
+                                                    <a class="text-dark" type="submit" href="#"><i class="fas fa-hammer" title="{{ __('Start mining') }}"></i></a>
+                                                </form>
+                                            </div>
                                         @endif
                                         @if (isset($topic['tweets']) && !empty($topic['tweets']))
-                                            <a href="{{ route('public.topics.tweets.index', ['topic' => $topicId]) }}" class="btn btn-sm btn-info text-white">See Tweets</a>
-                                            <a href="{{ route('public.topics.analysis.index', ['topic' => $topicId]) }}" class="btn btn-sm btn-danger text-white">See Analysis</a>
+                                            <div class="p-1">
+                                                <a class="text-primary" href="{{ route('public.topics.tweets.index', ['topic' => $topicId]) }}"><i class="fab fa-twitter" title="{{ __('See tweets') }}"></i></a>
+                                            </div>
+                                            <div class="p-1">
+                                                <a class="text-success" href="{{ route('public.topics.analysis.index', ['topic' => $topicId]) }}"><i class="fas fa-project-diagram" title="{{ __('See analysis') }}"></i></a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
