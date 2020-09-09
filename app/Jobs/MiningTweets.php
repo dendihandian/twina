@@ -14,7 +14,7 @@ use App\Repositories\TopicRepository;
 use App\Repositories\TopicTweetRepository;
 use Illuminate\Support\Collection;
 
-class MiningTopic implements ShouldQueue
+class MiningTweets implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -45,7 +45,7 @@ class MiningTopic implements ShouldQueue
         TopicRepository $topicRepository,
         TopicTweetRepository $topicTweetRepository
     ) {
-        Log::info('MiningTopic@handle start');
+        Log::info('MiningTweets@handle start');
         Log::debug(['topicId' => $this->topicId, 'userId' => $this->userId]);
 
         // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
@@ -132,6 +132,6 @@ class MiningTopic implements ShouldQueue
             }
         }
 
-        Log::info('MiningTopic@handle end');
+        Log::info('MiningTweets@handle end');
     }
 }

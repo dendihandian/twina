@@ -7,8 +7,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicRepository;
 use App\Entities\Topic;
 use App\Validators\TopicValidator;
-use App\Jobs\MiningTopic;
-use App\Jobs\AnalyzeTopic;
+use App\Jobs\MiningTweets;
+use App\Jobs\GenerateGraph;
 use App\Jobs\ComplementGraph;
 use App\Wrappers\Firebase\Firebase;
 
@@ -122,7 +122,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
             $this->firebase->updatePublicTopic($topicId, $param);
         }
 
-        MiningTopic::dispatch($topicId, $userId);
+        MiningTweets::dispatch($topicId, $userId);
     }
 
     public function startAnalyzing($topicId, $userId = null)
@@ -135,7 +135,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
             $this->firebase->updatePublicTopic($topicId, $param);
         }
 
-        AnalyzeTopic::dispatch($topicId, $userId);
+        GenerateGraph::dispatch($topicId, $userId);
     }
 
     public function startComplementingGraph($topicId, $userId = null)

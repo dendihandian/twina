@@ -89,7 +89,7 @@
         .append("circle")
         .attr("r", defaultNodeRadius) // radius or circle size
         .attr("fill", function (d) {
-            console.log('color(d.group)', color(d.group));
+            // console.log('color(d.group)', color(d.group));
             // return color(d.group);
             // return color(d.verified ? '#555' : '#aaa');
             // return '#2ca02c';

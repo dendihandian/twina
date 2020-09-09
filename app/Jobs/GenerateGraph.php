@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 
-class AnalyzeTopic implements ShouldQueue
+class GenerateGraph implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,7 +37,7 @@ class AnalyzeTopic implements ShouldQueue
      */
     public function handle(TopicRepository $topicRepository, PeopleRepository $peopleRepository)
     {
-        Log::debug('AnalyzeTopic@handle start');
+        Log::debug('GenerateGraph@handle start');
 
         try {
             $topic = $topicRepository->getTopic($this->topicId, $this->userId);
@@ -168,6 +168,6 @@ class AnalyzeTopic implements ShouldQueue
         }
 
 
-        Log::debug('AnalyzeTopic@handle end');
+        Log::debug('GenerateGraph@handle end');
     }
 }
