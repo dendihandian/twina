@@ -66,4 +66,17 @@ trait PublicTopic
         ]);
         return $response->json();
     }
+
+    public function getSelectedPublicTopic()
+    {
+        $response = Http::get($this->urlBuilder("/topics/public/selected_topic"));
+        return $response->json();
+    }
+
+    public function setSelectedPublicTopic($topicId)
+    {
+        $param = $topicId;
+        $response = Http::put($this->urlBuilder("/topics/public/selected_topic"), $param);
+        return $response->json();
+    }
 }

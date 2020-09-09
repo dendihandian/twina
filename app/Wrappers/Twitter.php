@@ -38,4 +38,32 @@ class Twitter
 
         return $this->connection->get("search/tweets", $params);
     }
+
+    public function getUserByScreenName(string $screenName)
+    {
+        // ref: https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-show
+        $param = ['screen_name' => $screenName];
+        return $this->connection->get("users/show", $param);
+    }
+
+    public function getUserByUserId(int $userId)
+    {
+        // ref: https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-show
+        $param = ['user_id' => $userId];
+        return $this->connection->get("users/show", $param);
+    }
+
+    public function getUsersByScreenNames(array $screenNames)
+    {
+        // ref: https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
+        $param = ['screen_name' => $screenNames];
+        return $this->connection->get("users/lookup", $param);
+    }
+
+    public function getUsersByUserIds(array $userIds)
+    {
+        // ref: https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
+        $param = ['user_id' => $userIds];
+        return $this->connection->get("users/lookup", $param);
+    }
 }

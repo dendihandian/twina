@@ -48,6 +48,7 @@ class AnalyzeTopic implements ShouldQueue
                 $nodes[$userScreenName] = [
                     'id' => $userScreenName,
                     'img' => $tweet['user']['profile_image_url'],
+                    'verified' => $tweet['user']['verified'] ?? false,
                     'group' => rand(1, 5), // TODO: you know...
                     // 'img_https' => $tweet['user']['profile_image_url_https'],
                     // TODO: profile, link profile, etc. here
@@ -102,6 +103,7 @@ class AnalyzeTopic implements ShouldQueue
                             $nodes[$mention['screen_name']] = [
                                 'id' => $mention['screen_name'],
                                 'group' => rand(1, 5),
+                                'verified' => false, // set to false because of mini object data
                             ];
                         }
                     }

@@ -23,9 +23,19 @@
                     <div class="card-body">
                         <form action="{{ route('public.topics.analysis.store', ['topic' => $topicId]) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary form-control">Analyze</button>
+                            <button type="submit" class="btn btn-primary form-control">{{ __('Analyze') }}</button>
                         </form>
-                        <a href="{{ route('public.topics.index', ['topic' => $topicId]) }}" class="btn btn-info form-control mt-2 text-white">{{ __('Back to list') }}</a>
+                        <form action="{{ route('public.topics.analysis.complement_graph', ['topic' => $topicId]) }}" method="POST" class="mt-2">
+                            @csrf
+                            <button type="submit" class="btn btn-primary form-control">{{ __('Complement graph') }}</button>
+                        </form>
+                        <form action="{{ route('public.topics.selected.store', ['topic' => $topicId]) }}" method="POST" class="mt-2">
+                            @csrf
+                            <button type="submit" class="btn btn-primary form-control">{{ __('Set as selected topic') }}</button>
+                        </form>
+                        <a href="{{ route('public.topics.index', ['topic' => $topicId]) }}" class="btn btn-info form-control mt-2 text-white">
+                            {{ __('Back to list') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -34,9 +44,5 @@
 @endsection
 
 @section('script')
-    <script>
-        var graph = {!! json_encode($graph ?? [], JSON_HEX_TAG) !!};
-        console.log('graph', graph);
-    </script>
     @include('graph.script')
 @endsection

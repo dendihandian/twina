@@ -9,6 +9,7 @@ use App\Entities\Topic;
 use App\Validators\TopicValidator;
 use App\Jobs\MiningTopic;
 use App\Jobs\AnalyzeTopic;
+use App\Jobs\ComplementGraph;
 use App\Wrappers\Firebase\Firebase;
 
 /**
@@ -41,6 +42,28 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
+    }
+
+    public function getSelectedTopic($userId = null)
+    {
+        if ($userId) {
+            $topicId = $this->firebase->getSelectedUserTopic($userId);
+        } else {
+            $topicId = $this->firebase->getSelectedPublicTopic();
+        }
+
+        $topic = $this->getTopic($topicId, $userId);
+
+        return $topic;
+    }
+
+    public function setSelectedTopic($topicId, $userId = null)
+    {
+        if ($userId) {
+            $this->firebase->setSelectedUserTopic($userId, $topicId);
+        } else {
+            $this->firebase->setSelectedPublicTopic($topicId);
+        }
     }
 
     public function getTopics($userId = null)
@@ -108,5 +131,18 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         }
 
         AnalyzeTopic::dispatch($topicId, $userId);
+    }
+
+    public function startComplementingGraph($topicId, $userId = null)
+    {
+        $param = ['on_complement_graph' => true];
+
+        if ($userId) {
+            $this->firebase->updateTopic($userId, $topicId, $param);
+        } else {
+            $this->firebase->updatePublicTopic($topicId, $param);
+        }
+
+        ComplementGraph::dispatch($topicId, $userId);
     }
 }

@@ -24,7 +24,7 @@
                                 <th scope="col" rowspan="2" class="align-middle text-center" width="20%">Actions</th>
                             </tr>
                             <tr>
-                                <th scope="col" class="align-middle">Tweet</th>
+                                <th scope="col" class="align-middle text-center">Tweet</th>
                                 <th scope="col" class="align-middle">Count</th>
                                 <th scope="col" class="align-middle">Date</th>
                             </tr>

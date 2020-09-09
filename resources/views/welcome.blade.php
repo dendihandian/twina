@@ -13,7 +13,7 @@
                     @include('graph.svg')
                 </div>
                 <div class="card-footer text-right">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    {{ $topic['text'] }}
                 </div>
             </div>
         </div>

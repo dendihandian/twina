@@ -7,6 +7,8 @@ use App\Http\Requests\TopicRequest;
 use App\Repositories\TopicRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 // use Illuminate\Database\Eloquent\Collection;
 
 class TopicController extends Controller
@@ -14,16 +16,16 @@ class TopicController extends Controller
     /**
      * @var TopicRepository
      */
-    protected $repository;
+    protected $topicRepository;
 
-    public function __construct(TopicRepository $repository)
+    public function __construct(TopicRepository $topicRepository)
     {
-        $this->repository = $repository;
+        $this->topicRepository = $topicRepository;
     }
 
     public function index()
     {
-        $topics = $this->repository->getTopics(Auth::user()->id);
+        $topics = $this->topicRepository->getTopics(Auth::user()->id);
         return view('topics.index', compact('topics'));
     }
 
@@ -35,7 +37,7 @@ class TopicController extends Controller
     public function store(TopicRequest $request)
     {
         try {
-            $this->repository->createTopic($request->only('name'), Auth::user()->id);
+            $this->topicRepository->createTopic($request->only('name'), Auth::user()->id);
             return redirect()->route('topics.index');
         } catch (\Throwable $th) {
             dd($th);
@@ -46,9 +48,9 @@ class TopicController extends Controller
     {
         try {
             // DB::beginTransaction();
-            $topic = $this->repository->getTopic($topicId, Auth::user()->id);
+            $topic = $this->topicRepository->getTopic($topicId, Auth::user()->id);
             if ($topic && !$topic['on_queue']) {
-                $this->repository->startMining($topicId, Auth::user()->id);
+                $this->topicRepository->startMining($topicId, Auth::user()->id);
             }
 
             // DB::commit();

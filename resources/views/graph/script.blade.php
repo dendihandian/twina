@@ -1,5 +1,9 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
+    var graph = {!! json_encode($graph ?? [], JSON_HEX_TAG) !!};
+    console.log('graph', graph);
+</script>
+<script>
 
     if (typeof(graph) === 'undefined') {
         var graph = {
@@ -13,6 +17,7 @@
     var svg = d3.select("svg");
     var width = svg.attr("width");
     var height = svg.attr("height");
+    var defaultNodeRadius = 5;
 
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -38,6 +43,39 @@
             return Math.sqrt(d.value);
         });
 
+    var linkLables = link
+        // .append("text")
+        // .text(function (d) {
+        //     return 'masuk pak eko';
+        // })
+        // .style('display', 'none')
+        // .attr("x", 6)
+        // .attr("y", 3);
+//   .append('text')
+//              .attr('class', 'barsEndlineText')
+//              .attr('text-anchor', 'middle')
+//               .attr("x", 0)
+//              .attr("y", ".35em")
+//              .text('I am label');
+    .append("text")
+    .attr("y", 6)//magic number here
+    .attr("x", function(){ return 3;})
+    .attr('text-anchor', 'middle')
+    .attr("class", "myLabel")//easy to style with CSS
+    .text("I'm a label");
+
+    // var setEventsLink = link.
+    //         on( 'mouseenter', function() {
+    //             d3.select( this )
+    //                 .selectAll("text")
+    //                 .style('display', 'block');
+    //         })
+    //         .on( 'mouseleave', function() {
+    //             d3.select( this )
+    //                 .selectAll("text")
+    //                 .style('display', 'none');
+    //         });
+
     var node = svg
         .append("g")
         .attr("class", "nodes")
@@ -49,9 +87,14 @@
     var imageRes = 20;
     var circles = node
         .append("circle")
-        .attr("r", 15) // radius or circle size
+        .attr("r", defaultNodeRadius) // radius or circle size
         .attr("fill", function (d) {
-            return color(d.group);
+            console.log('color(d.group)', color(d.group));
+            // return color(d.group);
+            // return color(d.verified ? '#555' : '#aaa');
+            // return '#2ca02c';
+            // return '#ff7f0e';
+            return (d.verified ? 'blue' : 'green');
         })
         .call(
             d3
@@ -70,24 +113,38 @@
         //     .attr("width", imageRes);
 
 
-    var images = node.append("svg:image")
-            .attr("xlink:href",  function(d) { return d.img;})
-            .attr("x", function(d) { return -(imageRes / 2);})
-            .attr("y", function(d) { return -(imageRes / 2);})
-            // .attr("style", "border-radius: 50%;")
-            .style("border-radius", '50%')
-            .style("pointer-events", 'none')
-            .style("user-select", 'none')
-            .attr("height", imageRes)
-            .attr("width", imageRes);
+    // var images = node.append("svg:image")
+    //         .attr("xlink:href",  function(d) { return d.img;})
+    //         .attr("x", function(d) { return -(imageRes / 2);})
+    //         .attr("y", function(d) { return -(imageRes / 2);})
+    //         // .attr("style", "border-radius: 50%;")
+    //         .style("border-radius", '50%')
+    //         .style("pointer-events", 'none')
+    //         .style("user-select", 'none')
+    //         .attr("height", imageRes)
+    //         .attr("width", imageRes);
 
-    // var lables = node
-    //     .append("text")
-    //     .text(function (d) {
-    //         return d.id;
-    //     })
-    //     .attr("x", 6)
-    //     .attr("y", 3);
+    var Nodelables = node
+        .append("text")
+        .text(function (d) {
+            return d.id;
+        })
+        .style('display', 'none')
+        .attr("x", 6)
+        .attr("y", 3);
+
+    var setEventsNode = node.
+            on( 'mouseenter', function() {
+                d3.select( this )
+                    .selectAll("text")
+                    .style('display', 'block');
+            })
+            .on( 'mouseleave', function() {
+                d3.select( this )
+                    .selectAll("text")
+                    .style('display', 'none');
+            });
+
 
     node.append("title").text(function (d) {
         return d.id;

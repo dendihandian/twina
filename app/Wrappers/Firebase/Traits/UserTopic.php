@@ -66,4 +66,17 @@ trait UserTopic
         ]);
         return $response->json();
     }
+
+    public function getSelectedUserTopic($userId)
+    {
+        $response = Http::get($this->urlBuilder("/topics/users/{$userId}/selected_topic"));
+        return $response->json();
+    }
+
+    public function setSelectedUserTopic($userId, $topicId)
+    {
+        $param = $topicId;
+        $response = Http::put($this->urlBuilder("/topics/users/{$userId}/selected_topic"), $param);
+        return $response->json();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TopicRequest;
 use Illuminate\Http\Request;
 use App\Repositories\TopicRepository;
+use Illuminate\Support\Facades\Log;
 
 class PublicTopicController extends Controller
 {
@@ -78,7 +79,6 @@ class PublicTopicController extends Controller
             ];
         }
 
-
         return view('public.topics.analysis', compact('topic', 'topicId', 'graph'));
     }
 
@@ -86,5 +86,24 @@ class PublicTopicController extends Controller
     {
         $this->topicRepository->startAnalyzing($topicId);
         return redirect()->route('public.topics.analysis.index', ['topic' => $topicId]);
+    }
+
+    public function postComplementGraph($topicId)
+    {
+        $this->topicRepository->startComplementingGraph($topicId);
+        return redirect()->route('public.topics.analysis.index', ['topic' => $topicId]);
+    }
+
+    public function setSelectedTopic(Request $request, $topicId)
+    {
+        try {
+            $this->topicRepository->setSelectedTopic($topicId);
+            $request->session()->flash('success', 'The topic was selected successfully');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Log::error($th);
+            $request->session()->flash('error', $this->errorMessage);
+            return redirect()->back();
+        }
     }
 }
