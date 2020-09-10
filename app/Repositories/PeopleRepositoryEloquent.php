@@ -7,7 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\PeopleRepository;
 use App\Entities\People;
 use App\Validators\PeopleValidator;
-use App\Wrappers\Twitter;
+use App\Wrappers\Twitter\Twitter;
 
 /**
  * Class PeopleRepositoryEloquent.
