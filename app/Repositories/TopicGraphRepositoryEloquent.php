@@ -10,6 +10,7 @@ use App\Validators\TopicGraphValidator;
 use App\Wrappers\Firebase\Firebase;
 use App\Jobs\NormalizeGraph;
 use App\Jobs\AnalyzeGraph;
+use App\Jobs\GenerateGraph;
 
 /**
  * Class TopicGraphRepositoryEloquent.
@@ -59,6 +60,15 @@ class TopicGraphRepositoryEloquent extends BaseRepository implements TopicGraphR
     public function getTopicGraph($topicId, $userId = null)
     {
         return $this->topicGraphEntity->getTopicGraph($topicId, $userId);
+    }
+
+    public function generateGraph($topicId, $userId = null)
+    {
+        $this->topicRepository->updateTopic($topicId, [
+            'on_generate' => true
+        ], $userId);
+
+        GenerateGraph::dispatch($topicId, $userId);
     }
 
     public function normalizeGraph($topicId, $userId = null)

@@ -40,6 +40,18 @@ class TopicGraphController extends Controller
         return view('topics.graph.index', compact('isPub', 'topicId', 'topic', 'graph'));
     }
 
+    public function generate(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        $this->topicGraphRepository->generateGraph(
+            $topicId,
+            $isPub ? null : Auth::user()->id
+        );
+
+        $request->session()->flash('success', 'Graph on generating...');
+        return redirect()->back();
+    }
+
     public function normalize(Request $request, $topicId)
     {
         $isPub = $request->has('isPub');
@@ -48,7 +60,7 @@ class TopicGraphController extends Controller
             $isPub ? null : Auth::user()->id
         );
 
-        $request->session()->flash('success', 'Graph normalized');
+        $request->session()->flash('success', 'Graph on normalizing...');
         return redirect()->back();
     }
 
@@ -60,7 +72,7 @@ class TopicGraphController extends Controller
             $isPub ? null : Auth::user()->id
         );
 
-        $request->session()->flash('success', 'Graph analyzed');
+        $request->session()->flash('success', 'Graph on analyzing...');
         return redirect()->back();
     }
 }
