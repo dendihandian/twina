@@ -6,7 +6,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TweetRepository;
 use App\Entities\Tweet;
-use App\Validators\TweetValidator;
+use App\Wrappers\Twitter\Twitter;
 
 /**
  * Class TweetRepositoryEloquent.
@@ -15,6 +15,8 @@ use App\Validators\TweetValidator;
  */
 class TweetRepositoryEloquent extends BaseRepository implements TweetRepository
 {
+    protected $twitter;
+
     /**
      * Specify Model class name
      *
@@ -25,7 +27,10 @@ class TweetRepositoryEloquent extends BaseRepository implements TweetRepository
         return Tweet::class;
     }
 
-    
+    public function __construct(Twitter $twitter)
+    {
+        $this->twitter = $twitter;
+    }
 
     /**
      * Boot up the repository, pushing criteria
@@ -34,5 +39,9 @@ class TweetRepositoryEloquent extends BaseRepository implements TweetRepository
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
+    public function searchTweets($param)
+    {
+        return $this->twitter->searchTweets($param);
+    }
 }

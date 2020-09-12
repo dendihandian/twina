@@ -11,5 +11,5 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 interface TweetRepository extends RepositoryInterface
 {
-    //
+    public function searchTweets($param);
 }

@@ -161,12 +161,12 @@ class GenerateGraph implements ShouldQueue
                         'nodes' => $nodes,
                         'edges' => $edges,
                     ],
-                    'on_analyze' => false,
+                    'on_generate' => false,
                 ], $this->userId);
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            $topicRepository->updateTopic($this->topicId, ['on_analyze' => false], $this->userId);
+            $topicRepository->updateTopic($this->topicId, ['on_generate' => false], $this->userId);
         }
 
 

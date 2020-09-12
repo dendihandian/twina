@@ -106,26 +106,4 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $this->updateTopic($topicId, $param, $userId);
         MiningTweets::dispatch($topicId, $userId);
     }
-
-    // TODO: move to graph repo
-    public function startAnalyzing($topicId, $userId = null)
-    {
-        $param = ['on_analyze' => true];
-        $this->updateTopic($topicId, $param, $userId);
-        GenerateGraph::dispatch($topicId, $userId);
-    }
-
-    // TODO: move to graph repo or remove
-    public function startComplementingGraph($topicId, $userId = null)
-    {
-        $param = ['on_complement_graph' => true];
-
-        if ($userId) {
-            $this->firebase->updateTopic($userId, $topicId, $param);
-        } else {
-            $this->firebase->updatePublicTopic($topicId, $param);
-        }
-
-        ComplementGraph::dispatch($topicId, $userId);
-    }
 }

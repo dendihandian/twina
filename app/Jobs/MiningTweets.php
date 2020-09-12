@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\TopicRepository;
 use App\Repositories\TopicTweetRepository;
+use App\Repositories\TweetRepository;
 use Illuminate\Support\Collection;
 
 class MiningTweets implements ShouldQueue
@@ -41,7 +42,8 @@ class MiningTweets implements ShouldQueue
      */
     public function handle(
         TopicRepository $topicRepository,
-        TopicTweetRepository $topicTweetRepository
+        TopicTweetRepository $topicTweetRepository,
+        TweetRepository $tweetRepository
     ) {
         Log::info('MiningTweets@handle start');
         Log::debug(['topicId' => $this->topicId, 'userId' => $this->userId]);
@@ -56,7 +58,7 @@ class MiningTweets implements ShouldQueue
             $tweetCount = $topic['tweets_count'] ?? 0;
 
             // search tweets
-            $statuses = $this->twitter->searchTweets([
+            $statuses = $tweetRepository->searchTweets([
                 'q' => $topic['text'],
                 'result_type' => $topic['result_type'] ?? 'recent',
                 'since_id' => $lastTweet ? $lastTweet['id'] : null,

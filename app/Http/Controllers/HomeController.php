@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\PreferenceRepository;
 use App\Repositories\TopicGraphRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -13,6 +14,7 @@ class HomeController extends Controller
 {
     protected $topicRepository;
     protected $topicGraphRepository;
+    protected $preferenceRepository;
 
     /**
      * Create a new controller instance.
@@ -21,10 +23,12 @@ class HomeController extends Controller
      */
     public function __construct(
         TopicRepository $topicRepository,
-        TopicGraphRepository $topicGraphRepository
+        TopicGraphRepository $topicGraphRepository,
+        PreferenceRepository $preferenceRepository
     ) {
         $this->topicRepository = $topicRepository;
         $this->topicGraphRepository = $topicGraphRepository;
+        $this->preferenceRepository = $preferenceRepository;
         $this->middleware('auth');
     }
 
@@ -35,16 +39,13 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $topic = $this->topicRepository->getSelectedTopic(Auth::user()->id);
-        // dd($topic);
+        $topicId = $this->preferenceRepository->getSelectedTopic(Auth::user()->id);
+        $topic = $this->topicRepository->getTopic($topicId, Auth::user()->id);
         $graph = $topic['graph'] ?? [];
 
-        // if (!empty($topic) && !$graph) {
-        //     $graph = $this->topicGraphRepository->getTopicGraph(
-        //         $topic['id'],
-        //         Auth::user()->id
-        //     );
-        // }
+        if (!$graph) {
+            $graph = $this->topicGraphRepository->getTopicGraph($topicId, Auth::user()->id);
+        }
 
         return view('home', compact('topic', 'graph'));
     }

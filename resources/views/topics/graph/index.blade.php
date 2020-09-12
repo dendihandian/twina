@@ -32,7 +32,7 @@
                     @php
                         $generateText = !$graphAvailable ? 'Generate graph' : 'Regenerate graph'; 
                     @endphp
-                    <form action="{{ route($publicPath . 'topics.analysis.store', ['topic' => $topicId]) }}" method="POST">
+                    <form action="{{ route($publicPath . 'topics.graph.generate', ['topic' => $topicId]) }}" method="POST">
                         @csrf
                         <button 
                             @if ($onGenerate = (isset($topic['on_generate']) && !empty($topic['on_generate'])))
@@ -51,7 +51,7 @@
                     <form action="{{ route($publicPath . 'topics.graph.analyze', ['topic' => $topicId]) }}" method="POST" class="mt-2">
                         @csrf
                         <button
-                            type="submit" class="btn btn-success form-control">{{ __('Analize graph') }}</button>
+                            type="submit" class="btn btn-success form-control">{{ __('Analyze graph') }}</button>
                     </form>
                     <form action="{{ route($publicPath . 'topics.selected.store', ['topic' => $topicId]) }}" method="POST" class="mt-2">
                         @csrf

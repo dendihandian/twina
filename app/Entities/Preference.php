@@ -7,37 +7,37 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class TopicGraph.
+ * Class Preference.
  *
  * @package namespace App\Entities;
  */
-class TopicGraph extends BaseEntity implements Transformable
+class Preference extends BaseEntity implements Transformable
 {
     use TransformableTrait, RESTClientTrait;
 
-    protected function pathBuilder($topicId, $userId = null)
+    protected function pathBuilder($userId = null)
     {
         if ($userId) {
-            $path = "/users/{$userId}/topics/{$topicId}/graph";
+            $path = "/users/{$userId}/preference";
         } else {
-            $path = "/public/topics/{$topicId}/graph";
+            $path = "/public/preference";
         }
 
         return $path;
     }
 
-    public function getTopicGraph($topicId, $userId = null)
+    public function getPreference($userId = null)
     {
         $restClient = self::getRESTClientInstance();
-        $path = $this->pathBuilder($topicId, $userId);
+        $path = $this->pathBuilder($userId);
         $response = $restClient->get($path);
         return $response;
     }
 
-    public function updateTopicGraph($topicId, $param, $userId = null)
+    public function updatePreference($param, $userId = null)
     {
         $restClient = self::getRESTClientInstance();
-        $path = $this->pathBuilder($topicId, $userId);
+        $path = $this->pathBuilder($userId);
         $response = $restClient->patch($path, $param);
         return $response;
     }

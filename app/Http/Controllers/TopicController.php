@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TopicRequest;
+use App\Repositories\PreferenceRepository;
 use Illuminate\Http\Request;
 use App\Repositories\TopicRepository;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +15,12 @@ class TopicController extends Controller
      * @var TopicRepository
      */
     protected $topicRepository;
+    protected $preferenceRepository;
 
-    public function __construct(TopicRepository $topicRepository)
+    public function __construct(TopicRepository $topicRepository, PreferenceRepository $preferenceRepository)
     {
         $this->topicRepository = $topicRepository;
+        $this->preferenceRepository = $preferenceRepository;
     }
 
     public function index(Request $request)
@@ -92,50 +95,11 @@ class TopicController extends Controller
         }
     }
 
-    public function getAnalysis(Request $request, $topicId)
-    {
-        $isPub = $request->has('isPub');
-        $topic = $this->topicRepository->getTopic(
-            $topicId,
-            $isPub ? null : Auth::user()->id
-        );
-        $graph = $topic['graph'] ?? null;
-
-        if ($graph) {
-            $graph = [
-                'nodes' => array_values($graph['nodes']),
-                'links' => array_values($graph['edges']),
-            ];
-        }
-
-        return view('topics.graph.index', compact('isPub', 'topic', 'topicId', 'graph'));
-    }
-
-    public function postAnalysis(Request $request, $topicId)
-    {
-        $isPub = $request->has('isPub');
-        $this->topicRepository->startAnalyzing(
-            $topicId,
-            $isPub ? null : Auth::user()->id
-        );
-        return redirect()->route(($isPub ? 'public.' : '') . 'topics.analysis.index', ['topic' => $topicId]);
-    }
-
-    public function postComplementGraph(Request $request, $topicId)
-    {
-        $isPub = $request->has('isPub');
-        $this->topicRepository->startComplementingGraph(
-            $topicId,
-            $isPub ? null : Auth::user()->id
-        );
-        return redirect()->route(($isPub ? 'public.' : '') . 'topics.analysis.index', ['topic' => $topicId]);
-    }
-
-    public function setSelectedTopic(Request $request, $topicId)
+    public function setSelected(Request $request, $topicId)
     {
         $isPub = $request->has('isPub');
         try {
-            $this->topicRepository->setSelectedTopic(
+            $this->preferenceRepository->setSelectedTopic(
                 $topicId,
                 $isPub ? null : Auth::user()->id
             );

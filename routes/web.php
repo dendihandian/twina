@@ -49,67 +49,16 @@ foreach ($startingPoints as $startingPoint) {
                     Route::get('/', 'TopicTweetController@index')->name('index');
                 });
 
-                Route::prefix('analysis')->name('analysis.')->group(function () {
-                    Route::get('/', 'TopicController@getAnalysis')->name('index');
-                    Route::post('/', 'TopicController@postAnalysis')->name('store');
-                    Route::post('/complement-graph', 'TopicController@postComplementGraph')->name('complement_graph');
-                    Route::post('/nro-graph', 'TopicController@postComplementGraph')->name('complement_graph');
-                });
-
                 Route::prefix('graph')->name('graph.')->group(function () {
                     Route::get('/', 'TopicGraphController@index')->name('index');
-                    // Route::post('/generate', 'TopicGraphController@generate')->name('generate');
+                    Route::post('/generate', 'TopicGraphController@generate')->name('generate');
                     Route::post('/normalize', 'TopicGraphController@normalize')->name('normalize');
                     Route::post('/analyze', 'TopicGraphController@analyze')->name('analyze');
                 });
 
                 Route::prefix('selected')->name('selected.')->group(function () {
-                    // Route::get('/', 'TopicController@getSelectedTopic')->name('index');
-                    Route::post('/', 'TopicController@setSelectedTopic')->name('store');
+                    Route::post('/', 'TopicController@setSelected')->name('store');
                 });
             });
         });
 }
-
-// Route::prefix('public')->name('public.')->middleware(['auth'])->group(function () {
-//     Route::prefix('topics')->name('topics.')->group(function () {
-//         Route::get('/', 'TopicController@index')->name('index');
-//         Route::post('/', 'TopicController@store')->name('store');
-//         Route::get('/create', 'TopicController@create')->name('create');
-
-//         Route::prefix('{topic}')->group(function () {
-//             Route::post('/mining', 'TopicController@mining')->name('mining');
-
-//             Route::prefix('tweets')->name('tweets.')->group(function () {
-//                 Route::get('/', 'PublicTopicTweetController@index')->name('index');
-//             });
-
-//             Route::prefix('analysis')->name('analysis.')->group(function () {
-//                 Route::get('/', 'TopicController@getAnalysis')->name('index');
-//                 Route::post('/', 'TopicController@postAnalysis')->name('store');
-//                 Route::post('/complement-graph', 'TopicController@postComplementGraph')->name('complement_graph');
-//             });
-
-//             Route::prefix('selected')->name('selected.')->group(function () {
-//                 // Route::get('/', 'TopicController@getSelectedTopic')->name('index');
-//                 Route::post('/', 'TopicController@setSelectedTopic')->name('store');
-//             });
-//         });
-//     });
-// });
-
-// // TODO: MAKE THE ROUTES DRY FOR PUBLIC AND USER BY USING ONE CONTROLLER !!!!
-
-// Route::prefix('topics')->name('topics.')->middleware(['auth'])->group(function () {
-//     Route::get('/', 'TopicController@index')->name('index');
-//     Route::post('/', 'TopicController@store')->name('store');
-//     Route::get('/create', 'TopicController@create')->name('create');
-
-//     Route::prefix('{topic}')->group(function () {
-//         Route::post('/mining', 'TopicController@mining')->name('mining');
-
-//         Route::prefix('tweets')->name('tweets.')->group(function () {
-//             Route::get('/', 'TopicTweetController@index')->name('index');
-//         });
-//     });
-// });
