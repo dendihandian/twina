@@ -41,6 +41,8 @@ foreach ($startingPoints as $startingPoint) {
             Route::get('/create', 'TopicController@create')->name('create');
 
             Route::prefix('{topic}')->group(function () {
+                Route::post('/delete', 'TopicController@delete')->name('delete');
+
                 Route::post('/mining', 'TopicController@mining')->name('mining');
 
                 Route::prefix('tweets')->name('tweets.')->group(function () {

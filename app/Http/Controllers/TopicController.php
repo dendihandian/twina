@@ -55,7 +55,23 @@ class TopicController extends Controller
                 $request->only(['name', 'result_type']),
                 $isPub ? null : Auth::user()->id
             );
+            $request->session()->flash('success', 'Topic created');
             return redirect()->route(($isPub ? 'public.' : '') . 'topics.index');
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
+    public function delete(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+        try {
+            $this->topicRepository->deleteTopic(
+                $topicId,
+                $isPub ? null : Auth::user()->id
+            );
+            $request->session()->flash('success', 'Topic was deleted');
+            return redirect()->back();
         } catch (\Throwable $th) {
             dd($th);
         }

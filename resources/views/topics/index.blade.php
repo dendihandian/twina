@@ -72,6 +72,14 @@
                                                 <a class="text-success" href="{{ route($publicPath . 'topics.graph.index', ['topic' => $topicId]) }}"><i class="fas fa-project-diagram" title="{{ __('See graph') }}"></i></a>
                                             </div>
                                         @endif
+                                        <div class="p-1">
+                                            <form id="{{ 'formDelete' . $topicId }}" action="{{ route($publicPath . 'topics.delete', ['topic' => $topicId]) }}" method="POST">
+                                                @csrf
+                                                <a
+                                                onclick="document.getElementById('{{ 'formDelete' . $topicId }}').submit();"
+                                                class="text-danger" type="submit"><i class="fas fa-trash" title="{{ __('Delete topic') }}"></i></a>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

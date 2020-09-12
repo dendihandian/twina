@@ -80,5 +80,13 @@
         </main>
     </div>
     @yield('script')
+    <script>
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            setTimeout(function(){
+                alert.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
