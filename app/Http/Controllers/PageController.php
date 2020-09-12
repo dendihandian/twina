@@ -19,13 +19,6 @@ class PageController extends Controller
         $topic = $this->topicRepository->getSelectedTopic();
         $graph = $topic['graph'] ?? null;
 
-        if ($graph) {
-            $graph = [
-                'nodes' => array_values($graph['nodes']),
-                'links' => array_values($graph['edges']),
-            ];
-        }
-
         return view('welcome', compact('topic', 'graph'));
     }
 }

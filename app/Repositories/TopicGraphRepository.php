@@ -11,5 +11,8 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 interface TopicGraphRepository extends RepositoryInterface
 {
+    public function getTopicGraph($topicId, $userId = null);
     public function updateTopicGraph($topicId, $param, $userId = null);
+    public function normalizeGraph($topicId, $userId = null);
+    public function analyzeGraph($topicId, $userId = null);
 }

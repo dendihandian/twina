@@ -97,7 +97,7 @@ class TopicController extends Controller
             ];
         }
 
-        return view('topics.analysis', compact('isPub', 'topic', 'topicId', 'graph'));
+        return view('topics.graph.index', compact('isPub', 'topic', 'topicId', 'graph'));
     }
 
     public function postAnalysis(Request $request, $topicId)

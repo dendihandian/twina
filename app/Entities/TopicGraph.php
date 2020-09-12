@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Entities\Traits\RESTClientTrait;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -11,15 +11,34 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Entities;
  */
-class TopicGraph extends Model implements Transformable
+class TopicGraph extends BaseEntity implements Transformable
 {
-    use TransformableTrait;
+    use TransformableTrait, RESTClientTrait;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [];
+    protected function pathBuilder($topicId, $userId = null)
+    {
+        if ($userId) {
+            $path = "/topics/users/{$userId}/{$topicId}/graph";
+        } else {
+            $path = "/topics/public/{$topicId}/graph";
+        }
 
+        return $path;
+    }
+
+    public function getTopicGraph($topicId, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->get($path);
+        return $response;
+    }
+
+    public function updateTopicGraph($topicId, $param, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->patch($path, $param);
+        return $response;
+    }
 }

@@ -17,12 +17,12 @@
                     <span>{{ __('Topics') }}</span>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" rowspan="2" class="align-middle">Topic</th>
                                 <th scope="col" rowspan="2" class="align-middle">Result Type</th>
-                                <th scope="col" rowspan="2" class="align-middle">Tweet Count</th>
+                                <th scope="col" rowspan="2" class="align-middle">Count</th>
                                 <th scope="col" colspan="3" class="align-middle text-center">Last Fetch</th>
                                 <th scope="col" rowspan="2" class="align-middle">Created At</th>
                                 <th scope="col" rowspan="2" class="align-middle text-center">On Queue</th>
@@ -69,7 +69,7 @@
                                                 <a class="text-primary" href="{{ route($publicPath . 'topics.tweets.index', ['topic' => $topicId]) }}"><i class="fab fa-twitter" title="{{ __('See tweets') }}"></i></a>
                                             </div>
                                             <div class="p-1">
-                                                <a class="text-success" href="{{ route($publicPath . 'topics.analysis.index', ['topic' => $topicId]) }}"><i class="fas fa-project-diagram" title="{{ __('See analysis') }}"></i></a>
+                                                <a class="text-success" href="{{ route($publicPath . 'topics.graph.index', ['topic' => $topicId]) }}"><i class="fas fa-project-diagram" title="{{ __('See graph') }}"></i></a>
                                             </div>
                                         @endif
                                     </td>

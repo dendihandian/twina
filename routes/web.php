@@ -51,6 +51,14 @@ foreach ($startingPoints as $startingPoint) {
                     Route::get('/', 'TopicController@getAnalysis')->name('index');
                     Route::post('/', 'TopicController@postAnalysis')->name('store');
                     Route::post('/complement-graph', 'TopicController@postComplementGraph')->name('complement_graph');
+                    Route::post('/nro-graph', 'TopicController@postComplementGraph')->name('complement_graph');
+                });
+
+                Route::prefix('graph')->name('graph.')->group(function () {
+                    Route::get('/', 'TopicGraphController@index')->name('index');
+                    // Route::post('/generate', 'TopicGraphController@generate')->name('generate');
+                    Route::post('/normalize', 'TopicGraphController@normalize')->name('normalize');
+                    Route::post('/analyze', 'TopicGraphController@analyze')->name('analyze');
                 });
 
                 Route::prefix('selected')->name('selected.')->group(function () {

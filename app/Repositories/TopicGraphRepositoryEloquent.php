@@ -8,6 +8,8 @@ use App\Repositories\TopicGraphRepository;
 use App\Entities\TopicGraph;
 use App\Validators\TopicGraphValidator;
 use App\Wrappers\Firebase\Firebase;
+use App\Jobs\NormalizeGraph;
+use App\Jobs\AnalyzeGraph;
 
 /**
  * Class TopicGraphRepositoryEloquent.
@@ -17,6 +19,9 @@ use App\Wrappers\Firebase\Firebase;
 class TopicGraphRepositoryEloquent extends BaseRepository implements TopicGraphRepository
 {
     protected $firebase;
+    protected $topicGraphEntity;
+    protected $topicRepository;
+
     /**
      * Specify Model class name
      *
@@ -27,9 +32,11 @@ class TopicGraphRepositoryEloquent extends BaseRepository implements TopicGraphR
         return TopicGraph::class;
     }
 
-    public function __construct(Firebase $firebase)
+    public function __construct(Firebase $firebase, TopicRepository $topicRepository)
     {
         $this->firebase = $firebase;
+        $this->topicRepository = $topicRepository;
+        $this->topicGraphEntity = new TopicGraph;
     }
 
     /**
@@ -47,5 +54,28 @@ class TopicGraphRepositoryEloquent extends BaseRepository implements TopicGraphR
         } else {
             $this->firebase->updatePublicTopicGraph($topicId, $param);
         }
+    }
+
+    public function getTopicGraph($topicId, $userId = null)
+    {
+        return $this->topicGraphEntity->getTopicGraph($topicId, $userId);
+    }
+
+    public function normalizeGraph($topicId, $userId = null)
+    {
+        $this->topicRepository->updateTopic($topicId, [
+            'on_normalize' => true
+        ], $userId);
+
+        NormalizeGraph::dispatch($topicId, $userId);
+    }
+
+    public function analyzeGraph($topicId, $userId = null)
+    {
+        $this->topicRepository->updateTopic($topicId, [
+            'on_analyze' => true
+        ], $userId);
+
+        AnalyzeGraph::dispatch($topicId, $userId);
     }
 }

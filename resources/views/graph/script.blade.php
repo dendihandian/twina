@@ -1,3 +1,18 @@
+@php
+    if (isset($graph['edges']) && !empty($graph['edges'])) {
+        $graph['links'] = $graph['edges'];
+        unset($graph['edges']);
+    }
+
+    if ($graph) {
+        $graph = [
+            'nodes' => array_values($graph['nodes']),
+            'links' => array_values($graph['links']),
+        ];
+    }
+
+@endphp
+
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
     var graph = {!! json_encode($graph ?? [], JSON_HEX_TAG) !!};
@@ -12,7 +27,7 @@
         } 
     }
 
-    console.log('graph', graph);
+    // console.log('graph', graph);
 
     var svg = d3.select("svg");
     var width = svg.attr("width");

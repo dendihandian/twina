@@ -16,7 +16,7 @@
                     <span><strong>{{ $topic['text'] . '\'s' }}</strong>&nbsp;{{  __('tweets') }}</span>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">ID</th>

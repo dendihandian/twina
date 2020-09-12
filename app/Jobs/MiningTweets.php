@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Wrappers\Twitter;
+use App\Wrappers\Twitter\Twitter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\TopicRepository;
@@ -33,7 +33,7 @@ class MiningTweets implements ShouldQueue
     ) {
         $this->topicId = $topicId;
         $this->userId = $userId;
-        $this->twitter = new Twitter;
+        $this->twitter = new Twitter; // TODO: don't use wrapper directly, use repository.
     }
 
     /**

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 
@@ -45,7 +46,6 @@ class GenerateGraph implements ShouldQueue
             $edges = [];
 
             foreach ($topic['tweets'] as $tweetId => $tweet) {
-                // dd($tweet['user']);
                 $userScreenName = $tweet['user']['screen_name'];
                 $nodes[$userScreenName] = [
                     'id' => $userScreenName,
@@ -75,6 +75,7 @@ class GenerateGraph implements ShouldQueue
                             'value' => 1,
                             'text' => $tweet['text'],
                             'tweet_id' => $tweet['id'],
+                            'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
                         ];
                     }
                 }
@@ -98,6 +99,7 @@ class GenerateGraph implements ShouldQueue
                                     'value' => 1,
                                     'text' => $tweet['text'],
                                     'tweet_id' => $tweet['id'],
+                                    'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
                                 ];
                             }
 
