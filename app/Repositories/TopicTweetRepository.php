@@ -12,5 +12,5 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 interface TopicTweetRepository extends RepositoryInterface
 {
     public function getTopicTweets($topicId, $userId = null);
-    public function putTopicTweets($topicId, $tweets, $userId = null);
+    public function setTopicTweets($topicId, $tweets, $userId = null);
 }

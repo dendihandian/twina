@@ -11,4 +11,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class BaseEntity extends Model
 {
+    protected $guarded = [];
 }

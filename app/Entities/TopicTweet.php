@@ -2,20 +2,35 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Entities\Traits\RESTClientTrait;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
 /**
  * Class TopicTweet.
  *
  * @package namespace App\Entities;
  */
-class TopicTweet extends Pivot
+class TopicTweet extends BaseEntity implements Transformable
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-    protected $table = 'topic_tweets';
+    use TransformableTrait, RESTClientTrait;
+
+    protected function pathBuilder($topicId, $userId = null)
+    {
+        if ($userId) {
+            $path = "/topics/users/{$userId}/{$topicId}/tweets";
+        } else {
+            $path = "/topics/public/{$topicId}/tweets";
+        }
+
+        return $path;
+    }
+
+    public function getTopicTweets($topicId, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->get($path);
+        return $response;
+    }
 }

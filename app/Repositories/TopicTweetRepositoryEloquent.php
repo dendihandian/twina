@@ -6,8 +6,6 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicTweetRepository;
 use App\Entities\TopicTweet;
-use App\Validators\TopicTweetValidator;
-use App\Wrappers\Firebase\Firebase;
 
 /**
  * Class TopicTweetRepositoryEloquent.
@@ -16,7 +14,7 @@ use App\Wrappers\Firebase\Firebase;
  */
 class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetRepository
 {
-    protected $firebase;
+    protected $topicTweetEntity;
 
     /**
      * Specify Model class name
@@ -30,7 +28,7 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
 
     public function __construct()
     {
-        $this->firebase = new Firebase;
+        $this->topicTweetEntity = new TopicTweet;
     }
 
     /**
@@ -43,23 +41,11 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
 
     public function getTopicTweets($topicId, $userId = null)
     {
-        if ($userId) {
-            $tweets = $this->firebase->getTopicTweets($userId, $topicId);
-        } else {
-            $tweets = $this->firebase->getPublicTopicTweets($topicId);
-        }
-
-        return $tweets;
+        return $this->topicTweetEntity->getTopicTweets($topicId, $userId);
     }
 
-    public function putTopicTweets($topicId, $tweets, $userId = null)
+    public function setTopicTweets($topicId, $tweets, $userId = null)
     {
-        if ($userId) {
-            $tweets = $this->firebase->putTopicTweets($userId, $topicId, $tweets);
-        } else {
-            $tweets = $this->firebase->putPublicTopicTweets($topicId, $tweets);
-        }
-
-        return $tweets;
+        return $this->topicTweetEntity->setTopicTweets($topicId, $tweets, $userId);
     }
 }

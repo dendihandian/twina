@@ -54,16 +54,17 @@
                                     <td class="align-middle">{{ (isset($topic['created_at']) && !empty($topic['created_at'])) ? $topic['created_at'] : '-' }}</td>
                                     <td class="align-middle text-center">{{ (isset($topic['on_queue']) && !empty($topic['on_queue'])) ? 'Yes' : 'No' }}</td>
                                     <td class="d-flex align-items-center justify-content-center">
-                                        @if (!(isset($topic['on_queue']) && !empty($topic['on_queue'])))
-                                            <div class="p-1">
-                                                <form id="{{ 'formMining' . $topicId }}" action="{{ route($publicPath . 'topics.mining', ['topic' => $topicId]) }}" method="POST">
-                                                    @csrf
-                                                    <a
-                                                    onclick="document.getElementById('{{ 'formMining' . $topicId }}').submit();"
-                                                    class="text-dark" type="submit"><i class="fas fa-hammer" title="{{ __('Start mining') }}"></i></a>
-                                                </form>
-                                            </div>
-                                        @endif
+                                        <div class="p-1">
+                                            <form id="{{ 'formMining' . $topicId }}" action="{{ route($publicPath . 'topics.mining', ['topic' => $topicId]) }}" method="POST">
+                                                @csrf
+                                                <a
+                                                @if (isset($topic['on_mining']) && !empty($topic['on_mining']))
+                                                    disabled
+                                                @endif
+                                                onclick="document.getElementById('{{ 'formMining' . $topicId }}').submit();"
+                                                class="text-dark" type="submit"><i class="fas fa-hammer" title="{{ __('Start mining') }}"></i></a>
+                                            </form>
+                                        </div>
                                         @if (isset($topic['tweets']) && !empty($topic['tweets']))
                                             <div class="p-1">
                                                 <a class="text-primary" href="{{ route($publicPath . 'topics.tweets.index', ['topic' => $topicId]) }}"><i class="fab fa-twitter" title="{{ __('See tweets') }}"></i></a>

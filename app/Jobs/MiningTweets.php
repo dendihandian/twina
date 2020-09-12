@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Wrappers\Twitter\Twitter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\TopicRepository;
@@ -33,7 +32,6 @@ class MiningTweets implements ShouldQueue
     ) {
         $this->topicId = $topicId;
         $this->userId = $userId;
-        $this->twitter = new Twitter; // TODO: don't use wrapper directly, use repository.
     }
 
     /**
@@ -51,42 +49,28 @@ class MiningTweets implements ShouldQueue
         // NOTE: for the best debugging experience, try to use QUEUE_CONNECTION=sync in the .env instead of 'database' or any queue driver.
 
         try {
-            if ($this->userId) {
-                $topic = $topicRepository->getTopic($this->topicId, $this->userId);
-            } else {
-                $topic = $topicRepository->getTopic($this->topicId);
-            }
+            // default / previous values
+            $topic = $topicRepository->getTopic($this->topicId, $this->userId);
+            $lastTweet = (isset($this->topic['last_fetch_tweet']) && !empty($this->topic['last_fetch_tweet'])) ? $this->topic['last_fetch_tweet'] : null;
+            $lastFetchCount = $topic['last_fetch_count'] ?? 0;
+            $tweetCount = $topic['tweets_count'] ?? 0;
 
-            Log::debug([
-                'topic' => $topic
-            ]);
-
-            $param = [
+            // search tweets
+            $statuses = $this->twitter->searchTweets([
                 'q' => $topic['text'],
                 'result_type' => $topic['result_type'] ?? 'recent',
-            ];
-
-            $lastTweet = (isset($this->topic['last_fetch_tweet']) && !empty($this->topic['last_fetch_tweet'])) ? $this->topic['last_fetch_tweet'] : null;
-
-            if ($lastTweet) {
-                $param['since_id'] = $lastTweet['id'];
-            }
-
-            $statuses = $this->twitter->searchTweets($param);
-
-            $tweetCount = 0;
-            $lastFetchCount = $topic['last_fetch_count'] ?? 0;
+                'since_id' => $lastTweet ? $lastTweet['id'] : null,
+            ]);
 
             if ($searchCount = count($statuses->statuses)) {
 
                 Log::debug('search tweets count: ' . $searchCount);
 
                 // TODO: find a way to append tweets if possible (without merging with existing)
-                if ($this->userId) {
-                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId, $this->userId);
-                } else {
-                    $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId);
-                }
+
+                // NOTE: performance exception
+                // $existingStatuses = $topicTweetRepository->getTopicTweets($this->topicId, $this->userId);
+                $existingStatuses = $topic['tweets'] ?? [];
 
                 $existingStatuses = (is_array($existingStatuses) && count($existingStatuses)) ? Collection::make($existingStatuses)->keyBy('id')->toArray() : [];
 
@@ -105,31 +89,22 @@ class MiningTweets implements ShouldQueue
                 $tweetCount = count($mergedStatuses);
             }
 
-            $updateParams = [
+            // NOTE: performance exception
+            // $topicTweetRepository->setTopicTweets($this->topicId, $mergedStatuses, $this->userId);
+
+            $topicRepository->updateTopic($this->topicId, [
                 'last_fetch_tweet' => $lastTweet,
                 'last_fetch_count' => $lastFetchCount,
                 'last_fetch_date' => Carbon::now()->toDateTimeString(),
                 'tweets_count' => $tweetCount,
-                'on_queue' => false,
-            ];
-
-            if ($this->userId) {
-                $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses, $this->userId);
-                $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
-            } else {
-                $topicTweetRepository->putTopicTweets($this->topicId, $mergedStatuses);
-                $topicRepository->updateTopic($this->topicId, $updateParams);
-            }
+                'on_mining' => false,
+                'tweets' => $mergedStatuses, // performance exception
+            ], $this->userId);
         } catch (\Throwable $th) {
             Log::error($th);
-
-            $updateParams = ['on_queue' => false];
-
-            if ($this->userId) {
-                $topicRepository->updateTopic($this->topicId, $updateParams, $this->userId);
-            } else {
-                $topicRepository->updateTopic($this->topicId, $updateParams);
-            }
+            $topicRepository->updateTopic($this->topicId, [
+                'on_mining' => false
+            ], $this->userId);
         }
 
         Log::info('MiningTweets@handle end');

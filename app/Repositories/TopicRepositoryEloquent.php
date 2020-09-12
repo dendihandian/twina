@@ -20,6 +20,7 @@ use App\Wrappers\Firebase\Firebase;
 class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 {
     protected $firebase;
+    protected $topicEntity;
 
     /**
      * Specify Model class name
@@ -34,6 +35,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     public function __construct()
     {
         $this->firebase = new Firebase;
+        $this->topicEntity = new Topic;
     }
 
     /**
@@ -68,20 +70,14 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
     public function getTopics($userId = null)
     {
-        if ($userId) {
-            return $this->firebase->getTopics($userId);
-        } else {
-            return $this->firebase->getPublicTopics();
-        }
+        $topics = $this->topicEntity->getTopics($userId) ?? [];
+        return $topics;
     }
 
     public function getTopic($topicId, $userId = null)
     {
-        if ($userId) {
-            return $this->firebase->getTopic($userId, $topicId);
-        } else {
-            return $this->firebase->getPublicTopic($topicId);
-        }
+        $topic = $this->topicEntity->getTopic($topicId, $userId) ?? null;
+        return $topic;
     }
 
     public function createTopic($param, $userId = null)
@@ -91,53 +87,35 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
             'result_type' => $param['result_type'],
         ];
 
-        if ($userId) {
-            $this->firebase->addTopic($userId, $param);
-        } else {
-            $this->firebase->addPublicTopic($param);
-        }
+        return $this->topicEntity->addTopic($param, $userId);
     }
 
     public function updateTopic($topicId, $param, $userId = null)
     {
-        if ($userId) {
-            $this->firebase->updateTopic($userId, $topicId, $param);
-        } else {
-            $this->firebase->updatePublicTopic($topicId, $param);
-        }
+        return $this->topicEntity->updateTopic($topicId, $param, $userId);
     }
 
     public function deleteTopic($topicId, $userId = null)
     {
-        $this->firebase->deleteTopic($topicId, $userId);
+        return $this->topicEntity->deleteTopic($topicId, $userId);
     }
 
     public function startMining($topicId, $userId = null)
     {
-        $param = ['on_queue' => true];
-
-        if ($userId) {
-            $this->firebase->updateTopic($userId, $topicId, $param);
-        } else {
-            $this->firebase->updatePublicTopic($topicId, $param);
-        }
-
+        $param = ['on_mining' => true];
+        $this->updateTopic($topicId, $param, $userId);
         MiningTweets::dispatch($topicId, $userId);
     }
 
+    // TODO: move to graph repo
     public function startAnalyzing($topicId, $userId = null)
     {
         $param = ['on_analyze' => true];
-
-        if ($userId) {
-            $this->firebase->updateTopic($userId, $topicId, $param);
-        } else {
-            $this->firebase->updatePublicTopic($topicId, $param);
-        }
-
+        $this->updateTopic($topicId, $param, $userId);
         GenerateGraph::dispatch($topicId, $userId);
     }
 
+    // TODO: move to graph repo or remove
     public function startComplementingGraph($topicId, $userId = null)
     {
         $param = ['on_complement_graph' => true];

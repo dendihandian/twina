@@ -2,53 +2,68 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Entities\Traits\RESTClientTrait;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Topic.
  *
  * @package namespace App\Entities;
  */
-class Topic extends Model implements Transformable
+class Topic extends BaseEntity implements Transformable
 {
-    use TransformableTrait;
+    use TransformableTrait, RESTClientTrait;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'last_mining' => 'datetime:Y-m-d h:i:s'
-    ];
-
-    public static function boot()
+    protected function pathBuilder($topicId, $userId = null)
     {
-        parent::boot();
+        $path = $userId ? "/users/{$userId}/topics" : "/public/topics";
+        $path = $topicId ? $path . "/{$topicId}" : $path;
 
-        // ref: https://stackoverflow.com/questions/38685019/laravel-how-to-create-a-function-after-or-before-saveupdate
+        return $path;
+    }
 
-        self::creating(function ($topic) {
-            $topic->name = Str::lower($topic->name);
-            $topic->slug = Str::slug($topic->name);
-        });
+    # /topics
 
-        self::created(function ($topic) {
-            UserTopic::firstOrCreate([
-                'user_id' => Auth::id(),
-                'topic_id' => $topic->id,
-            ]);
-        });
+    public function getTopics($userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder(null, $userId);
+        $response = $restClient->get($path);
+        return $response;
+    }
+
+    public function addTopic($param, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder(null, $userId);
+        $response = $restClient->post($path, $param);
+        return $response;
+    }
+
+    # /topics/{topic}
+
+    public function getTopic($topicId, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->get($path);
+        return $response;
+    }
+
+    public function updateTopic($topicId, $param, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->patch($path, $param);
+        return $response;
+    }
+
+    public function deleteTopic($topicId, $userId = null)
+    {
+        $restClient = self::getRESTClientInstance();
+        $path = $this->pathBuilder($topicId, $userId);
+        $response = $restClient->delete($path);
+        return $response;
     }
 }

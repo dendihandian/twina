@@ -19,6 +19,6 @@ class PageController extends Controller
         $topic = $this->topicRepository->getSelectedTopic();
         $graph = $topic['graph'] ?? null;
 
-        return view('welcome', compact('topic', 'graph'));
+        return view('pages.landing', compact('topic', 'graph'));
     }
 }

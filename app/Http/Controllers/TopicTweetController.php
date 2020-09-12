@@ -18,10 +18,24 @@ class TopicTweetController extends Controller
         $this->topicTweetRepository = $topicTweetRepository;
     }
 
-    public function index($topicId)
+    public function index(Request $request, $topicId)
     {
-        $topic = $this->topicRepository->getTopic($topicId, Auth::user()->id);
+        $isPub = $request->has('isPub');
+
+        $topic = $this->topicRepository->getTopic(
+            $topicId,
+            $isPub ? null : Auth::user()->id
+        );
+
         $tweets = $topic['tweets'] ?? [];
+
+        if (!$tweets) {
+            $tweets = $this->topicTweetRepository->getTopicTweets(
+                $topicId,
+                $isPub ? null : Auth::user()->id
+            );
+        }
+
         return view('topics.tweets.index', compact('topic', 'tweets'));
     }
 }

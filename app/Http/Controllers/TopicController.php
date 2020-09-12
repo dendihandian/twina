@@ -81,16 +81,11 @@ class TopicController extends Controller
     {
         $isPub = $request->has('isPub');
         try {
-            $topic = $this->topicRepository->getTopic(
+            $this->topicRepository->startMining(
                 $topicId,
                 $isPub ? null : Auth::user()->id
             );
-            if ($topic && !$topic['on_queue']) {
-                $this->topicRepository->startMining(
-                    $topicId,
-                    $isPub ? null : Auth::user()->id
-                );
-            }
+            $request->session()->flash('success', 'Mining tweets successfuly');
             return redirect()->back();
         } catch (\Throwable $th) {
             dd($th);
