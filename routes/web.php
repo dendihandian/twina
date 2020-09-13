@@ -50,6 +50,7 @@ foreach ($startingPoints as $startingPoint) {
 
                 Route::prefix('tweets')->name('tweets.')->group(function () {
                     Route::get('/', 'TopicTweetController@index')->name('index');
+                    Route::post('/analyze', 'TopicTweetController@analyze')->name('analyze');
                 });
 
                 Route::prefix('graph')->name('graph.')->group(function () {

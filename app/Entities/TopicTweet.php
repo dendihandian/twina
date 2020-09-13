@@ -18,9 +18,9 @@ class TopicTweet extends BaseEntity implements Transformable
     protected function pathBuilder($topicId, $userId = null)
     {
         if ($userId) {
-            $path = "/topics/users/{$userId}/{$topicId}/tweets";
+            $path = "/users/{$userId}/topics/{$topicId}/tweets";
         } else {
-            $path = "/topics/public/{$topicId}/tweets";
+            $path = "/public/topics/{$topicId}/tweets";
         }
 
         return $path;

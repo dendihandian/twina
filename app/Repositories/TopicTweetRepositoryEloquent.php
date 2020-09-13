@@ -6,6 +6,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicTweetRepository;
 use App\Entities\TopicTweet;
+use App\Jobs\AnalyzeTweets;
 
 /**
  * Class TopicTweetRepositoryEloquent.
@@ -15,6 +16,7 @@ use App\Entities\TopicTweet;
 class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetRepository
 {
     protected $topicTweetEntity;
+    protected $topicRepository;
 
     /**
      * Specify Model class name
@@ -26,8 +28,9 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
         return TopicTweet::class;
     }
 
-    public function __construct()
+    public function __construct(TopicRepository $topicRepository)
     {
+        $this->topicRepository = $topicRepository;
         $this->topicTweetEntity = new TopicTweet;
     }
 
@@ -47,5 +50,14 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
     public function setTopicTweets($topicId, $tweets, $userId = null)
     {
         return $this->topicTweetEntity->setTopicTweets($topicId, $tweets, $userId);
+    }
+
+    public function analyzeTweets($topicId, $userId = null)
+    {
+        $this->topicRepository->updateTopic($topicId, [
+            'on_analyze_tweets' => true
+        ], $userId);
+
+        AnalyzeTweets::dispatch($topicId, $userId);
     }
 }

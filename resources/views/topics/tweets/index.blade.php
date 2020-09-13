@@ -10,10 +10,16 @@
         <div class="col-md-10">
             <div class="row mx-1 d-flex justify-content-between mb-4">
                 <a href="{{ route($publicPath . 'topics.index') }}" class="btn btn-info mb-4">{{ __('Back to list') }}</a>
+                <div>
+                <form action="{{ route($publicPath . 'topics.tweets.analyze', ['topic' => $topicId]) }}" method="POST">
+                    @csrf
+                    <button class="btn btn-primary" type="submit">{{ __('Analyze the tweets') }}</button>
+                </form>
+                </div>
             </div>
-            <div class="card">
+            <div class="card" id="tweets">
                 <div class="card-header card-header-primary d-flex align-items-center justify-content-between">
-                    <span><strong>{{ $topic['text'] . '\'s' }}</strong>&nbsp;{{  __('tweets') }}</span>
+                    <span><strong>{{ ($topic['text'] ?? '') . '\'s' }}</strong>&nbsp;{{  __('tweets') }}</span>
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="mx-1">
                             <span class="badge badge-pill badge-info">{{ __('Count') . " : " . count($tweets) }}</span>
@@ -25,6 +31,18 @@
                                 </a>
                             </div>
                         @endif
+                        @if (!empty($tweetsAnalysis))
+                        <div class="mx-1">
+                            <a href="#tweets-analysis">
+                                <span class="badge badge-pill badge-info" title="{{ __('See analysis') }}">
+                                    <i class="fas fa-chart-pie"></i>
+                                </span>
+                            </a>
+
+                        </div>
+
+                        @endif
+
                     </div>
                 </div>
                 <div class="card-body">

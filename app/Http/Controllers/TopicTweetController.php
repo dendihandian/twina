@@ -36,6 +36,19 @@ class TopicTweetController extends Controller
             );
         }
 
-        return view('topics.tweets.index', compact('isPub', 'topicId', 'topic', 'tweets'));
+        $tweetsAnalysis = $topic['tweets_analysis'] ?? [];
+
+        return view('topics.tweets.index', compact('isPub', 'topicId', 'topic', 'tweets', 'tweetsAnalysis'));
+    }
+
+    public function analyze(Request $request, $topicId)
+    {
+        $isPub = $request->has('isPub');
+
+        $this->topicTweetRepository->analyzeTweets($topicId, $isPub ? null : Auth::user()->id);
+
+        $request->session()->flash('info', __('The tweets are being analyzed. Please wait in a few seconds'));
+
+        return redirect()->intended(route(($isPub ? 'public.' : '') . 'topics.tweets.index', ['topic' => $topicId]));
     }
 }

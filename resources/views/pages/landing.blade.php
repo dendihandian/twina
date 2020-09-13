@@ -13,7 +13,14 @@
                     @include('graph.svg')
                 </div>
                 <div class="card-footer text-right">
-                    {{ $topic['text'] }}
+                    @if (isset($topic['text']) && !empty($topic['text']))
+                        @php
+                            $topicUrl = "https://twitter.com/search?q=" . urlencode($topic['text'])
+                        @endphp
+                        <a target="_blank" href="{{ $topicUrl }}">{{ $topic['text'] }}</a>
+                    @else
+                        <span>-</span>
+                    @endif
                 </div>
             </div>
         </div>
