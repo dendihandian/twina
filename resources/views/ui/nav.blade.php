@@ -1,5 +1,5 @@
 <!--        primary navbar  -->
-<nav class="navbar navbar-expand-lg bg-primary">
+<nav class="navbar navbar-expand-lg bg-primary rounded-0 mb-0">
     <div class="container">
     <div class="navbar-translate">
         <a class="navbar-brand" href="{{ url('/') }}">

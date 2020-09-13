@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header card-header-info">{{ __('Your selected topic') }}</div>
+                <div class="card-header card-header-primary">{{ __('Your selected topic') }}</div>
                 <div class="card-body">
                     @include('graph.svg')
                 </div>

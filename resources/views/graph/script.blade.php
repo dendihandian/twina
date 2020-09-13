@@ -109,7 +109,11 @@
             // return color(d.verified ? '#555' : '#aaa');
             // return '#2ca02c';
             // return '#ff7f0e';
-            return (d.verified ? 'blue' : 'green');
+            if (d.deleted) {
+                return 'red';
+            } else {
+                return (d.verified ? 'blue' : 'green');
+            }
         })
         .call(
             d3

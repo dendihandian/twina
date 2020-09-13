@@ -49,6 +49,7 @@ class GenerateGraph implements ShouldQueue
                 $userScreenName = $tweet['user']['screen_name'];
                 $nodes[$userScreenName] = [
                     'id' => $userScreenName,
+                    'name' => $tweet['user']['name'],
                     'img' => $tweet['user']['profile_image_url'],
                     'verified' => $tweet['user']['verified'] ?? false,
                     'group' => rand(1, 5), // TODO: you know...
@@ -106,6 +107,7 @@ class GenerateGraph implements ShouldQueue
                             // adding to nodes
                             $nodes[$mention['screen_name']] = [
                                 'id' => $mention['screen_name'],
+                                'name' => $mention['name'],
                                 'group' => rand(1, 5),
                                 'verified' => false, // set to false because of mini object data
                             ];
@@ -132,20 +134,27 @@ class GenerateGraph implements ShouldQueue
                     'oldNodesCount' => count($oldNodes)
                 ]);
 
-                $screenNamesChunk = Collection::make($oldNodes)->keys()->chunk(100);
+                $oldNodeScreenNamesChunk = Collection::make($oldNodes)->keys()->chunk(100);
 
-                foreach ($screenNamesChunk as $screenNames) {
+                foreach ($oldNodeScreenNamesChunk as $screenNames) {
                     $peopleObjects = $peopleRepository->getPeoplesByScreenNames($screenNames->toArray());
                     if ($peopleObjects) {
                         foreach ($peopleObjects as $peopleObject) {
                             $newNodes[$peopleObject->screen_name] = [
                                 'id' => $oldNodes[$peopleObject->screen_name]['id'],
+                                'name' => $oldNodes[$peopleObject->screen_name]['name'],
                                 'group' => $oldNodes[$peopleObject->screen_name]['group'],
                                 'img' => $peopleObject->profile_image_url,
                                 'verified' => $peopleObject->verified,
                             ];
                         }
                     }
+                }
+
+                // find the deleted accounts
+                foreach (array_diff(array_keys($oldNodes), array_keys($newNodes)) as $screenName) {
+                    $newNodes[$screenName] = $oldNodes[$screenName];
+                    $newNodes[$screenName]['deleted'] = true;
                 }
 
                 Log::debug([

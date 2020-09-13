@@ -25,18 +25,18 @@
     <div id="app">
         @include('ui.nav')
         @include('ui.flash')
-        <main class="">
+        <main class="mt-4">
             @yield('content')
         </main>
     </div>
     @yield('script')
     <script>
-        var alert = document.querySelector('.alert');
-        if (alert) {
-            setTimeout(function(){
-                alert.style.display = 'none';
-            }, 5000);
-        }
+        // var alert = document.querySelector('.alert');
+        // if (alert) {
+        //     setTimeout(function(){
+        //         alert.style.display = 'none';
+        //     }, 5000);
+        // }
     </script>
 </body>
 </html>

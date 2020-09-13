@@ -52,10 +52,11 @@
                                     <td class="align-middle">{{ (isset($topic['last_fetch_date']) && !empty($topic['last_fetch_date'])) ? $topic['last_fetch_date'] : '-' }}</td>
                                     <td class="align-middle">{{ (isset($topic['created_at']) && !empty($topic['created_at'])) ? $topic['created_at'] : '-' }}</td>
                                     <td class="d-flex align-items-center justify-content-center">
+                                        {{-- Actions --}}
                                         <div class="p-1">
                                             <form id="{{ 'formMining' . $topicId }}" action="{{ route($publicPath . 'topics.mining', ['topic' => $topicId]) }}" method="POST">
                                                 @csrf
-                                                <a onclick="document.getElementById('{{ 'formMining' . $topicId }}').submit();"
+                                                <a href="#" onclick="document.getElementById('{{ 'formMining' . $topicId }}').submit();"
                                                 class="text-dark" type="submit"><i class="fas fa-hammer" title="{{ __('Start mining') }}"></i></a>
                                             </form>
                                         </div>
@@ -70,7 +71,7 @@
                                         <div class="p-1">
                                             <form id="{{ 'formDelete' . $topicId }}" action="{{ route($publicPath . 'topics.delete', ['topic' => $topicId]) }}" method="POST">
                                                 @csrf
-                                                <a
+                                                <a href="#"
                                                 onclick="document.getElementById('{{ 'formDelete' . $topicId }}').submit();"
                                                 class="text-danger" type="submit"><i class="fas fa-trash" title="{{ __('Delete topic') }}"></i></a>
                                             </form>

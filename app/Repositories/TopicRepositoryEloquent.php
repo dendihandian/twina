@@ -11,6 +11,7 @@ use App\Jobs\MiningTweets;
 use App\Jobs\GenerateGraph;
 use App\Jobs\ComplementGraph;
 use App\Wrappers\Firebase\Firebase;
+use Illuminate\Support\Carbon;
 
 /**
  * Class TopicRepositoryEloquent.
@@ -46,28 +47,6 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-    public function getSelectedTopic($userId = null)
-    {
-        if ($userId) {
-            $topicId = $this->firebase->getSelectedUserTopic($userId);
-        } else {
-            $topicId = $this->firebase->getSelectedPublicTopic();
-        }
-
-        $topic = $this->getTopic($topicId, $userId);
-
-        return $topic;
-    }
-
-    public function setSelectedTopic($topicId, $userId = null)
-    {
-        if ($userId) {
-            $this->firebase->setSelectedUserTopic($userId, $topicId);
-        } else {
-            $this->firebase->setSelectedPublicTopic($topicId);
-        }
-    }
-
     public function getTopics($userId = null)
     {
         $topics = $this->topicEntity->getTopics($userId) ?? [];
@@ -85,6 +64,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $param = [
             'text' => $param['name'],
             'result_type' => $param['result_type'],
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
 
         return $this->topicEntity->addTopic($param, $userId);
