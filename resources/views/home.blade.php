@@ -20,7 +20,7 @@
             <div class="card">
                 <div class="card-header card-header-primary">{{ __('Your selected topic') }}</div>
                 <div class="card-body">
-                    @include('graph.svg')
+                    @include('graph.svg', ['svgHeight' => '400'])
                 </div>
                 <div class="card-footer text-right">
                     {{ $topic['text'] ?? '-' }}

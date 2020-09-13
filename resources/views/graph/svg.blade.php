@@ -1,1 +1,1 @@
-<svg width="960" height="450"></svg>
+<svg width="{{ $svgWidth ?? '960' }}" height="{{ $svgHeight ?? '450' }}"></svg>
