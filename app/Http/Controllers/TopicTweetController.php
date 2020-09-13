@@ -36,6 +36,6 @@ class TopicTweetController extends Controller
             );
         }
 
-        return view('topics.tweets.index', compact('topicId', 'topic', 'tweets'));
+        return view('topics.tweets.index', compact('isPub', 'topicId', 'topic', 'tweets'));
     }
 }

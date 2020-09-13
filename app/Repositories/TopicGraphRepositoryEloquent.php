@@ -50,11 +50,7 @@ class TopicGraphRepositoryEloquent extends BaseRepository implements TopicGraphR
 
     public function updateTopicGraph($topicId, $param, $userId = null)
     {
-        if ($userId) {
-            $this->firebase->updateUserTopicGraph($userId, $topicId, $param);
-        } else {
-            $this->firebase->updatePublicTopicGraph($topicId, $param);
-        }
+        return $this->topicGraphEntity->updateTopicGraph($topicId, $param, $userId);
     }
 
     public function getTopicGraph($topicId, $userId = null)

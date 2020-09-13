@@ -24,6 +24,9 @@
         <ul class="navbar-nav mr-auto">
             @auth
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('public.topics.index')}}">{{ __('Public topics') }}</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('topics.index')}}">{{ __('Topics') }}</a>
                 </li>
             @endauth

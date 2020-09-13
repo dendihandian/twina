@@ -8,7 +8,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="row mx-1 d-flex justify-content-between">
+            <div class="row mx-1 d-flex justify-content-between mb-4">
                 <a href="{{ route($publicPath . 'topics.index') }}" class="btn btn-info mb-4">{{ __('Back to list') }}</a>
             </div>
             <div class="card">
@@ -20,7 +20,7 @@
                         </div>
                         @if (count($tweets))
                             <div class="mx-1">
-                                <a href="{{ route('topics.graph.index', ['topic' => $topicId]) }}">
+                                <a href="{{ route($publicPath . 'topics.graph.index', ['topic' => $topicId]) }}">
                                     <span class="badge badge-pill badge-success" title="{{ __('See graph') }}"><i class="fas fa-project-diagram"></i></span>
                                 </a>
                             </div>
@@ -62,6 +62,11 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10">
+            @include('topics.tweets.analysis.analysis-card')
         </div>
     </div>
 </div>

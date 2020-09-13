@@ -57,11 +57,24 @@
                         @csrf
                         <button type="submit" class="btn btn-rose text-white btn-round w-100">{{ __('Set as selected topic') }}</button>
                     </form>
+                    <a href="{{ route($publicPath . 'topics.tweets.index', ['topic' => $topicId]) }}" class="btn btn-info btn-round w-100 mt-2 text-white">
+                        {{ __('See the tweets') }}
+                    </a>
                     <a href="{{ route($publicPath . 'topics.index', ['topic' => $topicId]) }}" class="btn btn-info btn-round w-100 mt-2 text-white">
                         {{ __('Back to list') }}
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @include('topics.tweets.analysis.analysis-card')
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @include('topics.graph.analysis.analysis-card')
         </div>
     </div>
 </div>
