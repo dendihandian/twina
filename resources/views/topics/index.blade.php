@@ -13,7 +13,7 @@
                 <a href="{{ route($publicPath . 'topics.create') }}" class="btn btn-primary mb-4">{{ __('Add a topic') }}</a>
             </div>
             <div class="card">
-                <div class="card-header">
+                <div class="card-header card-header-primary">
                     <span>{{ __('Topics') }}</span>
                 </div>
                 <div class="card-body">

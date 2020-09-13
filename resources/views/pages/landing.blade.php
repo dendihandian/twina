@@ -17,14 +17,11 @@
                 </div>
             </div>
         </div>
+        @guest
         <div class="col-md-4 d-flex align-items-center">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
-                <div class="card-body">
-                    @include('auth.forms.login')
-                </div>
-            </div>
+            @include('ui.login-card')
         </div>
+        @endguest
     </div>
 </div>
 @endsection

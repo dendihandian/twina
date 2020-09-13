@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="card">
-                <div class="card-header">{{ __('Menu') }}</div>
+                <div class="card-header card-header-info">{{ __('Menu') }}</div>
                 <div class="card-body">
                     <p><a href="{{ route('public.topics.index') }}">{{ __('Manage Public Topics') }}</a></p>
                     <p><a href="{{ route('topics.index') }}">{{ __('Manage Your Topics') }}</a></p>
@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header">{{ __('Your selected topic') }}</div>
+                <div class="card-header card-header-info">{{ __('Your selected topic') }}</div>
                 <div class="card-body">
                     @include('graph.svg')
                 </div>
