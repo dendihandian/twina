@@ -7,6 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\TopicTweetRepository;
 use App\Entities\TopicTweet;
 use App\Jobs\AnalyzeTweets;
+use App\Jobs\MiningTweets;
 
 /**
  * Class TopicTweetRepositoryEloquent.
@@ -50,6 +51,15 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
     public function setTopicTweets($topicId, $tweets, $userId = null)
     {
         return $this->topicTweetEntity->setTopicTweets($topicId, $tweets, $userId);
+    }
+
+    public function mineTweets($topicId, $userId = null)
+    {
+        $this->topicRepository->updateTopic($topicId, [
+            'on_mining' => true
+        ], $userId);
+
+        MiningTweets::dispatch($topicId, $userId);
     }
 
     public function analyzeTweets($topicId, $userId = null)

@@ -79,6 +79,7 @@ class AnalyzeTweets implements ShouldQueue
             }
 
             $tweetsAnalysis = [
+                'tweets_count' => count($tweets),
                 'tweets_date_range' => $tweetsDateRange,
                 'langs_count' => $langsCount,
             ];

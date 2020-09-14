@@ -30,14 +30,14 @@ class TopicRequest extends FormRequest
         ];
     }
 
-    public function getValidatorInstance()
-    {
-        if ($this->request->has('name')) {
-            $this->merge([
-                'name' => Str::lower($this->request->get('name')),
-            ]);
-        }
+    // public function getValidatorInstance()
+    // {
+    //     if ($this->request->has('name')) {
+    //         $this->merge([
+    //             'name' => Str::lower($this->request->get('name')),
+    //         ]);
+    //     }
 
-        return parent::getValidatorInstance();
-    }
+    //     return parent::getValidatorInstance();
+    // }
 }

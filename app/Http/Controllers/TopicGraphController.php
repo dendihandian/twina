@@ -37,7 +37,10 @@ class TopicGraphController extends Controller
             );
         }
 
-        return view('topics.graph.index', compact('isPub', 'topicId', 'topic', 'graph'));
+        $tweetsAnalysis = $topic['tweets_analysis'] ?? false;
+        $graphAnalysis = $topic['graph']['analysis'] ?? false;
+
+        return view('topics.graph.index', compact('isPub', 'topicId', 'topic', 'graph', 'tweetsAnalysis', 'graphAnalysis'));
     }
 
     public function generate(Request $request, $topicId)

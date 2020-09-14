@@ -13,5 +13,6 @@ interface TopicTweetRepository extends RepositoryInterface
 {
     public function getTopicTweets($topicId, $userId = null);
     public function setTopicTweets($topicId, $tweets, $userId = null);
+    public function mineTweets($topicId, $userId = null);
     public function analyzeTweets($topicId, $userId = null);
 }

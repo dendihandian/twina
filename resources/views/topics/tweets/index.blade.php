@@ -10,7 +10,11 @@
         <div class="col-md-10">
             <div class="row mx-1 d-flex justify-content-between mb-4">
                 <a href="{{ route($publicPath . 'topics.index') }}" class="btn btn-info mb-4">{{ __('Back to list') }}</a>
-                <div>
+                <div class="d-flex justify-content-center">
+                <form action="{{ route($publicPath . 'topics.tweets.mine', ['topic' => $topicId]) }}" method="POST">
+                    @csrf
+                    <button class="btn btn-default" type="submit">{{ __('Start Mining') }}</button>
+                </form>
                 <form action="{{ route($publicPath . 'topics.tweets.analyze', ['topic' => $topicId]) }}" method="POST">
                     @csrf
                     <button class="btn btn-primary" type="submit">{{ __('Analyze the tweets') }}</button>

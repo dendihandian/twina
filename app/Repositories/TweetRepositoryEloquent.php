@@ -42,6 +42,7 @@ class TweetRepositoryEloquent extends BaseRepository implements TweetRepository
 
     public function searchTweets($param)
     {
+        $param['q'] = strtolower($param['q'] ?? '') ?? null;
         return $this->twitter->searchTweets($param);
     }
 }
