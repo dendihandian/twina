@@ -49,4 +49,12 @@ class HomeController extends Controller
 
         return view('home', compact('topic', 'graph'));
     }
+
+    public function resetPassword(Request $request)
+    {
+        // NOTE: This may conflict the email-based password reset process.
+        $user = Auth::user();
+        $token = app(\Illuminate\Auth\Passwords\PasswordBroker::class)->createToken($user);
+        return view('auth.passwords.reset', compact('token', 'user'));
+    }
 }

@@ -20,6 +20,7 @@ Route::prefix('register')->middleware('prodRestrict')->group(function () {
 
 Route::get('/', 'PageController@landingPage')->name('landing_page');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profile/reset-password', 'HomeController@resetPassword')->name('profile.reset_password');
 
 $startingPoints = [
     [
