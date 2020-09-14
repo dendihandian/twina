@@ -45,7 +45,7 @@ class TopicTweetController extends Controller
     {
         $isPub = $request->has('isPub');
         $this->topicTweetRepository->mineTweets($topicId, $isPub ? null : Auth::user()->id);
-        $request->session()->flash('info', __('The tweets are being mined. Please reload the page in a few seconds.'));
+        $request->session()->flash('info', __('The tweets are being mined. Please reload the page after few seconds.'));
         // return redirect()->intended(route(($isPub ? 'public.' : '') . 'topics.tweets.index', ['topic' => $topicId]));
         return redirect()->back();
     }
@@ -54,7 +54,7 @@ class TopicTweetController extends Controller
     {
         $isPub = $request->has('isPub');
         $this->topicTweetRepository->analyzeTweets($topicId, $isPub ? null : Auth::user()->id);
-        $request->session()->flash('info', __('The tweets are being analyzed. Please reload the page in a few seconds.'));
+        $request->session()->flash('info', __('The tweets are being analyzed. Please reload the page after few seconds.'));
         // return redirect()->intended(route(($isPub ? 'public.' : '') . 'topics.tweets.index', ['topic' => $topicId]));
         return redirect()->back();
     }

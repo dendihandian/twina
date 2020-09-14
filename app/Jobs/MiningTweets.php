@@ -53,16 +53,20 @@ class MiningTweets implements ShouldQueue
         try {
             // default / previous values
             $topic = $topicRepository->getTopic($this->topicId, $this->userId);
-            $lastTweet = (isset($this->topic['last_fetch_tweet']) && !empty($this->topic['last_fetch_tweet'])) ? $this->topic['last_fetch_tweet'] : null;
+            $lastTweet = $topic['last_fetch_tweet'] ?? null;
             $lastFetchCount = $topic['last_fetch_count'] ?? 0;
             $tweetCount = $topic['tweets_count'] ?? 0;
 
-            // search tweets
-            $statuses = $tweetRepository->searchTweets([
+            $searchParam = [
                 'q' => $topic['text'],
                 'result_type' => $topic['result_type'] ?? 'recent',
-                'since_id' => $lastTweet ? $lastTweet['id'] : null,
-            ]);
+                'since_id' => $lastTweet['id'] ?? null,
+            ];
+
+            Log::debug('search param', $searchParam);
+
+            // search tweets
+            $statuses = $tweetRepository->searchTweets($searchParam);
 
             if ($searchCount = count($statuses->statuses)) {
 
@@ -83,7 +87,7 @@ class MiningTweets implements ShouldQueue
                     $lastTweet = end($statuses);
                 }
 
-                $lastFetchCount = count($statuses);
+                $lastFetchCount = $searchCount;
 
                 // NOTE: merging two associative arrays using array_merge() will make the keys gone. So we use '+' operator instead. 
                 $mergedStatuses = $existingStatuses ? ($existingStatuses + $statuses) : $statuses;

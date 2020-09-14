@@ -51,7 +51,7 @@ class TopicGraphController extends Controller
             $isPub ? null : Auth::user()->id
         );
 
-        $request->session()->flash('success', 'Graph on generating...');
+        $request->session()->flash('info', __('The graph are being generated. Please reload the page after few seconds.'));
         return redirect()->back();
     }
 
@@ -63,7 +63,7 @@ class TopicGraphController extends Controller
             $isPub ? null : Auth::user()->id
         );
 
-        $request->session()->flash('success', 'Graph on normalizing...');
+        $request->session()->flash('info', __('The graph are being normalized. Please reload the page after few seconds.'));
         return redirect()->back();
     }
 
@@ -75,7 +75,7 @@ class TopicGraphController extends Controller
             $isPub ? null : Auth::user()->id
         );
 
-        $request->session()->flash('success', 'Graph on analyzing...');
+        $request->session()->flash('info', __('The graph are being analyzed. Please reload the page after few seconds.'));
         return redirect()->back();
     }
 }

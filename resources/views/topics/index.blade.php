@@ -20,17 +20,17 @@
                     <table class="table table-sm">
                         <thead class="">
                             <tr>
-                                <th scope="col" rowspan="2" class="align-middle text-center border-top-0">Topic</th>
-                                <th scope="col" rowspan="2" class="align-middle text-center border-top-0">Result Type</th>
-                                <th scope="col" rowspan="2" class="align-middle text-center border-top-0">Count</th>
-                                <th scope="col" colspan="3" class="align-middle text-center border-top-0">Last Fetch</th>
-                                <th scope="col" rowspan="2" class="align-middle text-center border-top-0">Created At</th>
-                                <th scope="col" rowspan="2" class="align-middle text-center border-top-0" width="5%">Actions</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center text-secondary border-top-0">Topic</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center text-secondary border-top-0">Result Type</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center text-secondary border-top-0">Count</th>
+                                <th scope="col" colspan="3" class="align-middle text-center text-secondary border-top-0">Last Fetch</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center text-secondary border-top-0">Created At</th>
+                                <th scope="col" rowspan="2" class="align-middle text-center text-secondary border-top-0" width="5%">Actions</th>
                             </tr>
                             <tr>
-                                <th scope="col" class="align-middle text-center border-top-0">Tweet</th>
-                                <th scope="col" class="align-middle text-center border-top-0">Count</th>
-                                <th scope="col" class="align-middle text-center border-top-0">Date</th>
+                                <th scope="col" class="align-middle text-center text-secondary border-top-0">Tweet</th>
+                                <th scope="col" class="align-middle text-center text-secondary border-top-0">Count</th>
+                                <th scope="col" class="align-middle text-center text-secondary border-top-0">Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,7 +54,7 @@
                                     <td class="d-flex align-items-center justify-content-center">
                                         {{-- Actions --}}
                                         <div class="p-1">
-                                            <form id="{{ 'formMining' . $topicId }}" action="{{ route($publicPath . 'topics.mining', ['topic' => $topicId]) }}" method="POST">
+                                            <form id="{{ 'formMining' . $topicId }}" action="{{ route($publicPath . 'topics.tweets.mine', ['topic' => $topicId]) }}" method="POST">
                                                 @csrf
                                                 <a href="#" onclick="document.getElementById('{{ 'formMining' . $topicId }}').submit();"
                                                 class="text-dark" type="submit"><i class="fas fa-hammer" title="{{ __('Start mining') }}"></i></a>

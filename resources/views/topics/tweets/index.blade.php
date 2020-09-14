@@ -53,9 +53,9 @@
                     <table class="table table-sm">
                         <thead class="">
                             <tr>
-                                <th class="text-center border-top-0" scope="col">ID</th>
-                                <th class="text-center border-top-0" scope="col">People</th>
-                                <th class="text-center border-top-0" scope="col">Text</th>
+                                <th class="text-center text-secondary border-top-0" scope="col">ID</th>
+                                <th class="text-center text-secondary border-top-0" scope="col">People</th>
+                                <th class="text-center text-secondary border-top-0" scope="col">Text</th>
                             </tr>
                         </thead>
                         <tbody class="table-striped">
