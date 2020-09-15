@@ -50,6 +50,9 @@ class AnalyzeTweets implements ShouldQueue
         $tweetsDateRange = ['min' => null, 'max' => null];
         $langsCount = [];
         $mostWords = [];
+        $mostMentions = [];
+        $mostHashtags = [];
+        $mostReplies = [];
 
         try {
 
@@ -90,6 +93,37 @@ class AnalyzeTweets implements ShouldQueue
                             }
                         }
                     }
+
+                    // most mentioned analysis
+                    if ($tweet['entities']['user_mentions'] ?? false) {
+                        foreach ($tweet['entities']['user_mentions'] as $user) {
+                            if (isset($mostMentions[$user['screen_name']])) {
+                                $mostMentions[$user['screen_name']] += 1;
+                            } else {
+                                $mostMentions[$user['screen_name']] = 1;
+                            }
+                        }
+                    }
+
+                    // most hashtags analysis
+                    if ($tweet['entities']['hashtags'] ?? false) {
+                        foreach ($tweet['entities']['hashtags'] as $hashtag) {
+                            if (isset($mostHashtags[$hashtag['text']])) {
+                                $mostHashtags[$hashtag['text']] += 1;
+                            } else {
+                                $mostHashtags[$hashtag['text']] = 1;
+                            }
+                        }
+                    }
+
+                    // most replies analysis
+                    if ($tweet['in_reply_to_screen_name'] ?? false) {
+                        if (isset($mostReplies[$tweet['in_reply_to_screen_name']])) {
+                            $mostReplies[$tweet['in_reply_to_screen_name']] += 1;
+                        } else {
+                            $mostReplies[$tweet['in_reply_to_screen_name']] = 1;
+                        }
+                    }
                 }
             }
 
@@ -107,11 +141,48 @@ class AnalyzeTweets implements ShouldQueue
                 })->values()->toArray();
             }
 
+            if (count($mostMentions)) {
+                arsort($mostMentions);
+                $mostMentions = array_slice($mostMentions, 0, 10);
+                $mostMentions = Collection::make($mostMentions)->map(function ($count, $screenName) {
+                    return [
+                        'text' => $screenName,
+                        'count' => $count
+                    ];
+                })->values()->toArray();
+            }
+
+            if (count($mostHashtags)) {
+                arsort($mostHashtags);
+                $mostHashtags = array_slice($mostHashtags, 0, 10);
+                $mostHashtags = Collection::make($mostHashtags)->map(function ($count, $hashtag) {
+                    return [
+                        'text' => $hashtag,
+                        'count' => $count
+                    ];
+                })->values()->toArray();
+            }
+
+            if (count($mostReplies)) {
+                arsort($mostReplies);
+                $mostReplies = array_slice($mostReplies, 0, 10);
+                $mostReplies = Collection::make($mostReplies)->map(function ($count, $hashtag) {
+                    return [
+                        'text' => $hashtag,
+                        'count' => $count
+                    ];
+                })->values()->toArray();
+            }
+
             $tweetsAnalysis = [
                 'tweets_count' => count($tweets),
                 'tweets_date_range' => $tweetsDateRange,
-                'langs_count' => $langsCount,
+                'langs_count' => $langsCount, // TOBEREMOVED
+                'most_langs' => $langsCount,
                 'most_words' => $mostWords,
+                'most_mentions' => $mostMentions,
+                'most_hashtags' => $mostHashtags,
+                'most_replies' => $mostReplies,
             ];
 
             Log::debug($tweetsAnalysis);

@@ -19,10 +19,19 @@
             <span class="badge badge-pill badge-info">{{ __('Tweets maximum date: ') . ($tweetsAnalysis['tweets_date_range']['max'] ?? '-')}}</span>
         </div> --}}
         <div class="row d-flex justify-content-center">
-            <div class="analysis-wrapper">
+            <div class="analysis-wrapper my-2">
                 <canvas id="most_words" width="400" height="400"></canvas>
             </div>
-            <div class="analysis-wrapper">
+            <div class="analysis-wrapper my-2">
+                <canvas id="most_mentions" width="400" height="400"></canvas>
+            </div>
+            <div class="analysis-wrapper my-2">
+                <canvas id="most_replies" width="400" height="400"></canvas>
+            </div>
+            <div class="analysis-wrapper my-2">
+                <canvas id="most_hashtags" width="400" height="400"></canvas>
+            </div>
+            <div class="analysis-wrapper my-2">
                 <canvas id="most_langs" width="400" height="400"></canvas>
             </div>
         </div>

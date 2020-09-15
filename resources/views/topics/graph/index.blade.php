@@ -32,12 +32,12 @@
                     <form action="{{ route($publicPath . 'topics.tweets.mine', ['topic' => $topicId]) }}" method="POST" class="mt-2">
                         @csrf
                         <button
-                            type="submit" class="btn btn-sm btn-default btn-round w-100">{{ __('Mining Tweets') }}</button>
+                            type="submit" class="btn btn-sm btn-primary btn-round w-100">{{ __('Mining Tweets') }}</button>
                     </form>
                     <form action="{{ route($publicPath . 'topics.tweets.analyze', ['topic' => $topicId]) }}" method="POST" class="mt-2">
                         @csrf
                         <button
-                            type="submit" class="btn btn-sm btn-primary btn-round w-100">{{ __('Analyze Tweets') }}</button>
+                            type="submit" class="btn btn-sm btn-success btn-round w-100">{{ __('Analyze Tweets') }}</button>
                     </form>
                     <a href="{{ route($publicPath . 'topics.tweets.index', ['topic' => $topicId]) }}" class="btn btn-sm btn-info btn-round w-100 mt-2 text-white">
                         {{ __('See the tweets') }}

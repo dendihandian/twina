@@ -7,6 +7,24 @@
             $analysis['most_words']['values'] = array_column($tweetsAnalysis['most_words'], 'count');
         }
 
+        if ($tweetsAnalysis['most_mentions'] ?? false) {
+            $analysis['most_mentions']['title'] = __('Most mentions');
+            $analysis['most_mentions']['labels'] = array_column($tweetsAnalysis['most_mentions'], 'text');
+            $analysis['most_mentions']['values'] = array_column($tweetsAnalysis['most_mentions'], 'count');
+        }
+
+        if ($tweetsAnalysis['most_replies'] ?? false) {
+            $analysis['most_replies']['title'] = __('Most replies');
+            $analysis['most_replies']['labels'] = array_column($tweetsAnalysis['most_replies'], 'text');
+            $analysis['most_replies']['values'] = array_column($tweetsAnalysis['most_replies'], 'count');
+        }
+
+        if ($tweetsAnalysis['most_hashtags'] ?? false) {
+            $analysis['most_hashtags']['title'] = __('Most hashtags');
+            $analysis['most_hashtags']['labels'] = array_column($tweetsAnalysis['most_hashtags'], 'text');
+            $analysis['most_hashtags']['values'] = array_column($tweetsAnalysis['most_hashtags'], 'count');
+        }
+
         if ($tweetsAnalysis['langs_count'] ?? false) {
             $analysis['most_langs']['title'] = __('Most languages');
             $analysis['most_langs']['labels'] = array_keys($tweetsAnalysis['langs_count']);
