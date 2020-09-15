@@ -28,34 +28,35 @@ class FirebaseREST
     public function get($path)
     {
         $response = Http::get($this->urlBuilder($path));
+        Log::debug('FirebaseREST@get', [$response->getStatusCode()]);
         return $response->json();
     }
 
     public function post($path, $param = [])
     {
         $response = Http::post($this->urlBuilder($path), $param);
-        Log::debug('FirebaseREST@post', $response->json());
+        Log::debug('FirebaseREST@post', [$response->getStatusCode()]);
         return $response->json();
     }
 
     public function patch($path, $param = [])
     {
         $response = Http::patch($this->urlBuilder($path), $param);
-        Log::debug('FirebaseREST@patch', $response->json());
+        Log::debug('FirebaseREST@patch', [$response->getStatusCode()]);
         return $response->json();
     }
 
     public function put($path, $param = [])
     {
         $response = Http::put($this->urlBuilder($path), $param);
-        Log::debug('FirebaseREST@put', $response->json());
+        Log::debug('FirebaseREST@put', [$response->getStatusCode()]);
         return $response->json();
     }
 
     public function delete($path)
     {
         $response = Http::delete($this->urlBuilder($path));
-        Log::debug('FirebaseREST@delete', $response->json());
+        Log::debug('FirebaseREST@delete', [$response->getStatusCode()]);
         return $response->json();
     }
 }

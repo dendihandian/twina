@@ -104,7 +104,7 @@ class MiningTweets implements ShouldQueue
                 'last_fetch_date' => Carbon::now()->toDateTimeString(),
                 'tweets_count' => $tweetCount,
                 'on_mining' => false,
-                'tweets' => $mergedStatuses, // performance exception
+                'tweets' => $mergedStatuses ?? false, // performance exception
             ], $this->userId);
         } catch (\Throwable $th) {
             Log::error($th);

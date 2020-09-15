@@ -124,6 +124,11 @@ class AnalyzeTweets implements ShouldQueue
                             $mostReplies[$tweet['in_reply_to_screen_name']] = 1;
                         }
                     }
+
+                    if ($tweet['location'] ?? false) {
+                        Log::debug('location: ');
+                        Log::debug($tweet['location']);
+                    }
                 }
             }
 
@@ -199,9 +204,9 @@ class AnalyzeTweets implements ShouldQueue
             ], $this->userId);
         }
 
-        $topicRepository->updateTopic($this->topicId, [
-            'on_analyze_tweets' => false
-        ], $this->userId);
+        // $topicRepository->updateTopic($this->topicId, [
+        //     'on_analyze_tweets' => false
+        // ], $this->userId);
 
         Log::info('AnalyzeTweets@handle end');
     }

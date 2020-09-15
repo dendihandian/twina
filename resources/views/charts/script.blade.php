@@ -53,10 +53,9 @@ var colors = [
 var analysis = {!! json_encode($analysis ?? false, JSON_HEX_TAG) !!};
 
 if (analysis) {
-    console.log('analysis', analysis)
+    // console.log('analysis', analysis)
     _.keys(analysis).forEach((name) => {
         // console.log('analysis[name]', analysis[name]);
-
         var data = {
             title: analysis[name].title,
             labels: analysis[name].labels,
@@ -69,47 +68,21 @@ if (analysis) {
             labels: data.labels,
             datasets: [{
                 label: "idk",
-                backgroundColor: _.slice(colors, 0, data.labels.length),
+                backgroundColor: _.slice(_.shuffle(colors), 0, data.labels.length),
                 data: data.values
             }]
             },
             options: {
-            title: {
-                display: true,
-                text: data.title
-            },
-            legend: {
-                display: true,
-                position: 'bottom'
-            }
+                title: {
+                    display: true,
+                    text: data.title
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
             }
         });
     });
 }
-
-
-
-// var data = {!! json_encode($analysis['most_words'] ?? [], JSON_HEX_TAG) !!};
-
-// new Chart(document.getElementById("most-words-canvas"), {
-//     type: 'pie',
-//     data: {
-//       labels: data.labels,
-//       datasets: [{
-//         label: "Population (millions)",
-//         backgroundColor: _.slice(colors, 0, data.labels.length),
-//         data: data.values
-//       }]
-//     },
-//     options: {
-//       title: {
-//         display: true,
-//         text: data.title
-//       },
-//       legend: {
-//           display: true,
-//           position: 'bottom'
-//       }
-//     }
-// });
 </script>

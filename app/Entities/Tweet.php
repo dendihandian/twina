@@ -24,6 +24,17 @@ class Tweet extends Model implements Transformable
 
     const EXCEPTIONAL_WORDS = [
         'rt',
+        'to',
+        'be',
+        'and',
+        'of',
+        'on',
+        'in',
+        'is',
+        'are',
+        'with',
+        'for',
+        'the',
     ];
 
     const EXPLICIT_WORDS = [];
