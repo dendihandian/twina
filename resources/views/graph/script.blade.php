@@ -45,7 +45,12 @@
             })
         )
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
+
+        // center the graph
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("x", d3.forceX(width / 2))
+        .force("y", d3.forceY(height / 2))
+        .alpha(0.1).restart();
 
     var link = svg
         .append("g")
