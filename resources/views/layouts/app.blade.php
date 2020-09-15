@@ -28,7 +28,25 @@
         <main class="mt-4">
             @yield('content')
         </main>
+        <footer class="footer" data-background-color="black">
+            <div class="container d-flex align-items-center justify-content-between">
+                <nav>
+                    <ul>
+                        <li>
+                            <a class="h3" target="_blank" href="https://github.com/dendihandian"><i class="fab fa-github"></i></a>
+                        </li>
+                        <li>
+                            <a class="h3" target="_blank" href="https://linkedin.com/in/dendihandian"><i class="fab fa-linkedin"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright float-right">
+                Dendi Handian © {{ Date('Y') }} 
+                </div>
+            </div>
+        </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js" integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww==" crossorigin="anonymous"></script>
     @yield('script')
     <script>
         var alert = document.querySelector('.alert');

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Entities\Tweet;
 use App\Repositories\TopicRepository;
 use App\Repositories\TopicTweetRepository;
 use Illuminate\Bus\Queueable;
@@ -48,6 +49,7 @@ class AnalyzeTweets implements ShouldQueue
         // default values
         $tweetsDateRange = ['min' => null, 'max' => null];
         $langsCount = [];
+        $mostWords = [];
 
         try {
 
@@ -75,13 +77,41 @@ class AnalyzeTweets implements ShouldQueue
                             $langsCount[$tweet['lang']] = 1;
                         }
                     }
+
+                    // most words analysis
+                    $words = explode(' ', filter_var($tweet['text'], FILTER_SANITIZE_STRING));
+                    foreach ($words as $word) {
+                        $word = strtolower($word);
+                        if (!empty($word) && (strlen($word) > 1) && !in_array($word, Tweet::EXCEPTIONAL_WORDS)) {
+                            if (isset($mostWords[$word])) {
+                                $mostWords[$word] += 1;
+                            } else {
+                                $mostWords[$word] = 1;
+                            }
+                        }
+                    }
                 }
+            }
+
+            if (count($mostWords)) {
+                arsort($mostWords);
+                $mostWords = array_slice($mostWords, 0, 10);
+
+                // NOTE: an '#' prefix cannot be added to firebase, so wrap it on quote...
+                // NOTE: it's complicated with firebase, so the text should be a value not a key...
+                $mostWords = Collection::make($mostWords)->map(function ($count, $word) {
+                    return [
+                        'text' => $word,
+                        'count' => $count
+                    ];
+                })->values()->toArray();
             }
 
             $tweetsAnalysis = [
                 'tweets_count' => count($tweets),
                 'tweets_date_range' => $tweetsDateRange,
                 'langs_count' => $langsCount,
+                'most_words' => $mostWords,
             ];
 
             Log::debug($tweetsAnalysis);

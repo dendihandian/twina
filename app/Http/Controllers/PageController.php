@@ -21,8 +21,9 @@ class PageController extends Controller
     {
         $topicId = $this->preferenceRepository->getSelectedTopic();
         $topic = $topicId ? $this->topicRepository->getTopic($topicId) : null;
+        $tweetsAnalysis = $topic['tweets_analysis'] ?? [];
         $graph = $topic['graph'] ?? null;
 
-        return view('pages.landing', compact('topic', 'graph'));
+        return view('pages.landing', compact('topic', 'graph', 'tweetsAnalysis'));
     }
 }

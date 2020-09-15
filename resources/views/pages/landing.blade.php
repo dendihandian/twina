@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card mt-0">
                 <div class="card-body">
-                    @include('graph.svg')
+                    @include('graph.svg', ['svgWidth' => 700])
                 </div>
                 <div class="card-footer text-right">
                     @if (isset($topic['text']) && !empty($topic['text']))
@@ -30,10 +30,17 @@
         </div>
         @endguest
     </div>
+    <div class="row">
+        @include('topics.tweets.analysis.analysis-card')
+    </div>
+    <div class="row">
+        @include('topics.graph.analysis.analysis-card')
+    </div>
 </div>
 @endsection
 
 @section('script')
     @include('graph.script')
+    @include('charts.script')
 @endsection
 

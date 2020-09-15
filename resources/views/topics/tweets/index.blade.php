@@ -93,3 +93,7 @@
     </div>
 </div>
 @endsection
+
+@section('script')
+    @include('charts.script')
+@endsection

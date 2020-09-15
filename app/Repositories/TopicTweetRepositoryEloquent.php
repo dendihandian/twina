@@ -8,6 +8,7 @@ use App\Repositories\TopicTweetRepository;
 use App\Entities\TopicTweet;
 use App\Jobs\AnalyzeTweets;
 use App\Jobs\MiningTweets;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TopicTweetRepositoryEloquent.
@@ -68,6 +69,7 @@ class TopicTweetRepositoryEloquent extends BaseRepository implements TopicTweetR
             'on_analyze_tweets' => true
         ], $userId);
 
+        Log::info('TopicTweetRepositoryEloquent@analyzeTweets AnalyzeTweets');
         AnalyzeTweets::dispatch($topicId, $userId);
     }
 }

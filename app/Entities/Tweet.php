@@ -21,4 +21,10 @@ class Tweet extends Model implements Transformable
      * @var array
      */
     protected $guarded = [];
+
+    const EXCEPTIONAL_WORDS = [
+        'rt',
+    ];
+
+    const EXPLICIT_WORDS = [];
 }

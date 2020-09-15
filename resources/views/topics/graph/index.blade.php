@@ -101,4 +101,5 @@
 
 @section('script')
     @include('graph.script')
+    @include('charts.script')
 @endsection
