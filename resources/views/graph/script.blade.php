@@ -151,10 +151,14 @@
     var Nodelables = node
         .append("text")
         .text(function (d) {
-            return d.id;
+            if (d.screen_name) {
+                return d.screen_name;
+            } else {
+                return d.id;
+            }
         })
         .style('display', 'none')
-        .attr("x", 6)
+        .attr("x", 12)
         .attr("y", 3);
 
     var setEventsNode = node.
@@ -162,11 +166,19 @@
                 d3.select( this )
                     .selectAll("text")
                     .style('display', 'block');
+
+                d3.select(this)
+                    .selectAll('circle')
+                    .attr('r', 10);
             })
             .on( 'mouseleave', function() {
                 d3.select( this )
                     .selectAll("text")
                     .style('display', 'none');
+
+                d3.select(this)
+                    .selectAll('circle')
+                    .attr('r', defaultNodeRadius);
             });
 
 

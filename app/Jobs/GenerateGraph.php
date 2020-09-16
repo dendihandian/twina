@@ -46,37 +46,37 @@ class GenerateGraph implements ShouldQueue
             $edges = [];
 
             foreach ($topic['tweets'] as $tweetId => $tweet) {
-                $userScreenName = $tweet['user']['screen_name'];
-                $nodes[$userScreenName] = [
-                    'id' => $userScreenName,
+                $nodes[$tweet['user']['id']] = [
+                    'id' => $tweet['user']['id'],
+                    'screen_name' => $tweet['user']['screen_name'],
                     'name' => $tweet['user']['name'],
                     'img' => $tweet['user']['profile_image_url'],
+                    'img_https' => $tweet['user']['profile_image_url_https'],
                     'verified' => $tweet['user']['verified'] ?? false,
-                    'group' => rand(1, 5), // TODO: you know...
-                    // 'img_https' => $tweet['user']['profile_image_url_https'],
-                    // TODO: profile, link profile, etc. here
                 ];
 
                 // check for in reply
-                $inReplyScreenName = null;
-                if (isset($tweet['in_reply_to_screen_name']) && !empty($tweet['in_reply_to_screen_name'])) {
-                    $inReplyScreenName = $tweet['in_reply_to_screen_name'];
-                    if (isset($edges[$userScreenName . '@' . $inReplyScreenName])) {
-                        $edges[$userScreenName . '@' . $inReplyScreenName]['value'] += 1;
-                        $edges[$userScreenName . '@' . $inReplyScreenName]['text'] = $tweet['text'];
-                        $edges[$userScreenName . '@' . $inReplyScreenName]['tweet_id'] = $tweet['id'];
-                    } else if (isset($edges[$inReplyScreenName . '@' . $userScreenName])) {
-                        $edges[$inReplyScreenName . '@' . $userScreenName]['value'] += 1;
-                        $edges[$inReplyScreenName . '@' . $userScreenName]['text'] = $tweet['text'];
-                        $edges[$inReplyScreenName . '@' . $userScreenName]['tweet_id'] = $tweet['id'];
+                $inReplyUserId = null;
+                if (isset($tweet['in_reply_to_id']) && !empty($tweet['in_reply_to_id'])) {
+                    $inReplyUserId = $tweet['in_reply_to_id'];
+                    if (isset($edges[$tweet['user']['id'] . '@' . $inReplyUserId])) {
+                        $edges[$tweet['user']['id'] . '@' . $inReplyUserId]['value'] += 1;
+                        $edges[$tweet['user']['id'] . '@' . $inReplyUserId]['text'] = $tweet['text'];
+                        $edges[$tweet['user']['id'] . '@' . $inReplyUserId]['tweet_id'] = $tweet['id'];
+                    } else if (isset($edges[$inReplyUserId . '@' . $tweet['user']['id']])) {
+                        $edges[$inReplyUserId . '@' . $tweet['user']['id']]['value'] += 1;
+                        $edges[$inReplyUserId . '@' . $tweet['user']['id']]['text'] = $tweet['text'];
+                        $edges[$inReplyUserId . '@' . $tweet['user']['id']]['tweet_id'] = $tweet['id'];
                     } else {
-                        $edges[$userScreenName . '@' . $inReplyScreenName] = [
-                            'source' => $userScreenName,
-                            'target' => $inReplyScreenName,
+                        $edges[$tweet['user']['id'] . '@' . $inReplyUserId] = [
+                            'source' => $tweet['user']['id'],
+                            'target' => $inReplyUserId,
                             'value' => 1,
-                            'text' => $tweet['text'],
-                            'tweet_id' => $tweet['id'],
-                            'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
+                            'tweet' => [
+                                'id' => $tweet['id'],
+                                'text' => $tweet['text'],
+                                'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
+                            ],
                         ];
                     }
                 }
@@ -84,31 +84,33 @@ class GenerateGraph implements ShouldQueue
                 // check for mentions
                 if (isset($tweet['entities']['user_mentions']) && !empty($tweet['entities']['user_mentions'])) {
                     foreach ($tweet['entities']['user_mentions'] as $mention) {
-                        if ($mention['screen_name'] != $inReplyScreenName) {
-                            if (isset($edges[$userScreenName . '@' . $mention['screen_name']])) {
-                                $edges[$userScreenName . '@' . $mention['screen_name']]['value'] += 1;
-                                $edges[$userScreenName . '@' . $mention['screen_name']]['text'] = $tweet['text'];
-                                $edges[$userScreenName . '@' . $mention['screen_name']]['tweet_id'] = $tweet['id'];
-                            } else if (isset($edges[$mention['screen_name'] . '@' . $userScreenName])) {
-                                $edges[$mention['screen_name'] . '@' . $userScreenName]['value'] += 1;
-                                $edges[$mention['screen_name'] . '@' . $userScreenName]['text'] = $tweet['text'];
-                                $edges[$mention['screen_name'] . '@' . $userScreenName]['tweet_id'] = $tweet['id'];
+                        if ($mention['id'] != $inReplyUserId) {
+                            if (isset($edges[$tweet['user']['id'] . '@' . $mention['id']])) {
+                                $edges[$tweet['user']['id'] . '@' . $mention['id']]['value'] += 1;
+                                $edges[$tweet['user']['id'] . '@' . $mention['id']]['text'] = $tweet['text'];
+                                $edges[$tweet['user']['id'] . '@' . $mention['id']]['tweet_id'] = $tweet['id'];
+                            } else if (isset($edges[$mention['id'] . '@' . $tweet['user']['id']])) {
+                                $edges[$mention['id'] . '@' . $tweet['user']['id']]['value'] += 1;
+                                $edges[$mention['id'] . '@' . $tweet['user']['id']]['text'] = $tweet['text'];
+                                $edges[$mention['id'] . '@' . $tweet['user']['id']]['tweet_id'] = $tweet['id'];
                             } else {
-                                $edges[$userScreenName . '@' . $mention['screen_name']] = [
-                                    'source' => $userScreenName,
-                                    'target' => $mention['screen_name'],
+                                $edges[$tweet['user']['id'] . '@' . $mention['id']] = [
+                                    'source' => $tweet['user']['id'],
+                                    'target' => $mention['id'],
                                     'value' => 1,
-                                    'text' => $tweet['text'],
-                                    'tweet_id' => $tweet['id'],
-                                    'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
+                                    'tweet' => [
+                                        'id' => $tweet['id'],
+                                        'text' => $tweet['text'],
+                                        'date' => Carbon::parse($tweet['created_at'])->toDateTimeString(),
+                                    ],
                                 ];
                             }
 
                             // adding to nodes
-                            $nodes[$mention['screen_name']] = [
-                                'id' => $mention['screen_name'],
+                            $nodes[$mention['id']] = [
+                                'id' => $mention['id'],
                                 'name' => $mention['name'],
-                                'group' => rand(1, 5),
+                                'screen_name' => $mention['screen_name'],
                                 'verified' => false, // set to false because of mini object data
                             ];
                         }
@@ -134,16 +136,17 @@ class GenerateGraph implements ShouldQueue
                     'oldNodesCount' => count($oldNodes)
                 ]);
 
-                $oldNodeScreenNamesChunk = Collection::make($oldNodes)->keys()->chunk(100);
+                $oldNodeUserIds = Collection::make($oldNodes)->keys()->chunk(100);
 
-                foreach ($oldNodeScreenNamesChunk as $screenNames) {
-                    $peopleObjects = $peopleRepository->getPeoplesByScreenNames($screenNames->toArray());
+                foreach ($oldNodeUserIds as $userIds) {
+                    $peopleObjects = $peopleRepository->getPeoplesByUserIds($userIds->toArray());
                     if ($peopleObjects) {
                         foreach ($peopleObjects as $peopleObject) {
-                            $newNodes[$peopleObject->screen_name] = [
-                                'id' => $oldNodes[$peopleObject->screen_name]['id'],
-                                'name' => $oldNodes[$peopleObject->screen_name]['name'],
-                                'group' => $oldNodes[$peopleObject->screen_name]['group'],
+                            // dd($peopleObject);
+                            $newNodes[$peopleObject->id] = [
+                                'id' => $oldNodes[$peopleObject->id]['id'],
+                                'name' => $oldNodes[$peopleObject->id]['name'],
+                                'screen_name' => $oldNodes[$peopleObject->id]['screen_name'],
                                 'img' => $peopleObject->profile_image_url,
                                 'verified' => $peopleObject->verified,
                             ];
@@ -152,9 +155,9 @@ class GenerateGraph implements ShouldQueue
                 }
 
                 // find the deleted accounts
-                foreach (array_diff(array_keys($oldNodes), array_keys($newNodes)) as $screenName) {
-                    $newNodes[$screenName] = $oldNodes[$screenName];
-                    $newNodes[$screenName]['deleted'] = true;
+                foreach (array_diff(array_keys($oldNodes), array_keys($newNodes)) as $userId) {
+                    $newNodes[$userId] = $oldNodes[$userId];
+                    $newNodes[$userId]['deleted'] = true;
                 }
 
                 Log::debug([

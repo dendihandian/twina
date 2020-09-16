@@ -2,6 +2,8 @@
 
 namespace App\Wrappers\Twitter\Traits;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Trends
  */
@@ -23,6 +25,8 @@ trait Search
             'count' => $params['count'] ?? $this->config['search']['default']['count'],
             'since_id' => $params['since_id'] ?? null,
         ];
+
+        Log::debug('Search@searchTweets', $params);
 
         return $this->client->get("search/tweets", $params);
     }
