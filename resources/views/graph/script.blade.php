@@ -59,30 +59,9 @@
         .data(graph.links)
         .enter()
         .append("line")
-        .attr("stroke-width", function (d) {
+        .style("stroke-width", function (d) {
             return Math.sqrt(d.value);
         });
-
-    var linkLables = link
-        // .append("text")
-        // .text(function (d) {
-        //     return 'masuk pak eko';
-        // })
-        // .style('display', 'none')
-        // .attr("x", 6)
-        // .attr("y", 3);
-//   .append('text')
-//              .attr('class', 'barsEndlineText')
-//              .attr('text-anchor', 'middle')
-//               .attr("x", 0)
-//              .attr("y", ".35em")
-//              .text('I am label');
-    .append("text")
-    .attr("y", 6)//magic number here
-    .attr("x", function(){ return 3;})
-    .attr('text-anchor', 'middle')
-    .attr("class", "myLabel")//easy to style with CSS
-    .text("I'm a label");
 
     // var setEventsLink = link.
     //         on( 'mouseenter', function() {
@@ -148,7 +127,7 @@
     //         .attr("height", imageRes)
     //         .attr("width", imageRes);
 
-    var Nodelables = node
+    var nodeLabels = node
         .append("text")
         .text(function (d) {
             if (d.screen_name) {
@@ -160,6 +139,14 @@
         .style('display', 'none')
         .attr("x", 12)
         .attr("y", 3);
+
+    var linkLabels = link
+        .append("text")
+        .attr("y", 12)
+        .attr("x", function(){ return 12;})
+        .style('display', 'block')
+        .text("I'm a label")
+        .attr('font-size', 10);
 
     var setEventsNode = node.
             on( 'mouseenter', function() {
@@ -181,9 +168,23 @@
                     .attr('r', defaultNodeRadius);
             });
 
+    var setEventsLink = link.
+            on( 'mouseenter', function() {
+                console.log('mpe');
+                d3.select( this )
+                    .selectAll("text")
+                    .style('display', 'block');
+            })
+            .on( 'mouseleave', function() {
+                console.log('lpe');
+                d3.select( this )
+                    .selectAll("text")
+                    .style('display', 'none');
+            });
+
 
     node.append("title").text(function (d) {
-        return d.id;
+        return d.screen_name;
     });
 
     simulation.nodes(graph.nodes).on("tick", ticked);

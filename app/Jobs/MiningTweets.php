@@ -98,14 +98,20 @@ class MiningTweets implements ShouldQueue
             // NOTE: performance exception
             // $topicTweetRepository->setTopicTweets($this->topicId, $mergedStatuses, $this->userId);
 
-            $topicRepository->updateTopic($this->topicId, [
+            $param = [
                 'last_fetch_tweet' => $lastTweet,
                 'last_fetch_count' => $lastFetchCount,
                 'last_fetch_date' => Carbon::now()->toDateTimeString(),
                 'tweets_count' => $tweetCount,
                 'on_mining' => false,
-                'tweets' => $mergedStatuses ?? false, // performance exception
-            ], $this->userId);
+            ];
+
+            // prevent tweets accident deletion
+            if ($mergedStatuses ?? false) {
+                $param['tweets'] = $mergedStatuses;
+            }
+
+            $topicRepository->updateTopic($this->topicId, $param, $this->userId);
         } catch (\Throwable $th) {
             Log::error($th);
             $topicRepository->updateTopic($this->topicId, [
