@@ -10,8 +10,10 @@ use App\Validators\TopicValidator;
 use App\Jobs\MiningTweets;
 use App\Jobs\GenerateGraph;
 use App\Jobs\ComplementGraph;
+use App\Repositories\Traits\RepositoryCacheTrait;
 use App\Wrappers\Firebase\Firebase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class TopicRepositoryEloquent.
@@ -20,6 +22,8 @@ use Illuminate\Support\Carbon;
  */
 class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 {
+    use RepositoryCacheTrait;
+
     protected $firebase;
     protected $topicEntity;
 
@@ -55,7 +59,14 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
     public function getTopic($topicId, $userId = null)
     {
-        $topic = $this->topicEntity->getTopic($topicId, $userId) ?? null;
+        $cachePath = $this->buildCachePath('topic', compact('topicId'), $userId);
+
+        if (Cache::has($cachePath)) {
+            $topic = Cache::get($cachePath);
+        } else {
+            $topic = $this->topicEntity->getTopic($topicId, $userId) ?? null;
+            Cache::add($cachePath, $topic);
+        }
         return $topic;
     }
 
