@@ -112,6 +112,7 @@ class MiningTweets implements ShouldQueue
             }
 
             $topicRepository->updateTopic($this->topicId, $param, $this->userId);
+            $topicRepository->clearCaches($this->topicId, $this->userId);
         } catch (\Throwable $th) {
             Log::error($th);
             $topicRepository->updateTopic($this->topicId, [

@@ -17,4 +17,5 @@ interface TopicRepository extends RepositoryInterface
     public function updateTopic($topicId, $param, $userId = null);
     public function deleteTopic($topicId, $userId = null);
     public function startMining($topicId, $userId = null); // TODO: probably move to TopicTweet repo
+    public function clearCaches($topicId = null, $userId = null);
 }

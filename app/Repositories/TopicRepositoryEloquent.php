@@ -53,7 +53,15 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
     public function getTopics($userId = null)
     {
-        $topics = $this->topicEntity->getTopics($userId) ?? [];
+        $cachePath = $this->buildCachePath('topics', [], $userId);
+
+        if (Cache::has($cachePath)) {
+            $topics = Cache::get($cachePath);
+        } else {
+            $topics = $this->topicEntity->getTopics($userId) ?? [];
+            Cache::put($cachePath, $topics);
+        }
+
         return $topics;
     }
 
@@ -65,7 +73,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
             $topic = Cache::get($cachePath);
         } else {
             $topic = $this->topicEntity->getTopic($topicId, $userId) ?? null;
-            Cache::add($cachePath, $topic);
+            Cache::put($cachePath, $topic);
         }
         return $topic;
     }
@@ -78,17 +86,29 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
             'created_at' => Carbon::now()->toDateTimeString(),
         ];
 
-        return $this->topicEntity->addTopic($param, $userId);
+        $result = $this->topicEntity->addTopic($param, $userId);
+
+        $this->clearCaches($topicId, $userId);
+
+        return $result;
     }
 
     public function updateTopic($topicId, $param, $userId = null)
     {
-        return $this->topicEntity->updateTopic($topicId, $param, $userId);
+        $result = $this->topicEntity->updateTopic($topicId, $param, $userId);
+
+        $this->clearCaches($topicId, $userId);
+
+        return $result;
     }
 
     public function deleteTopic($topicId, $userId = null)
     {
-        return $this->topicEntity->deleteTopic($topicId, $userId);
+        $result = $this->topicEntity->deleteTopic($topicId, $userId);
+
+        $this->clearCaches($topicId, $userId);
+
+        return $result;
     }
 
     public function startMining($topicId, $userId = null)
@@ -96,5 +116,11 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
         $param = ['on_mining' => true];
         $this->updateTopic($topicId, $param, $userId);
         MiningTweets::dispatch($topicId, $userId);
+    }
+
+    public function clearCaches($topicId = null, $userId = null)
+    {
+        if (Cache::has($cachePath = $this->buildCachePath('topics', [], $userId))) Cache::forget($cachePath);
+        if (Cache::has($cachePath = $this->buildCachePath('topic', compact('topicId'), $userId))) Cache::forget($cachePath);
     }
 }
