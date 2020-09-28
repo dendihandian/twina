@@ -175,6 +175,8 @@ class GenerateGraph implements ShouldQueue
                     ],
                     'on_generate' => false,
                 ], $this->userId);
+
+                $topicRepository->clearCaches($this->topicId, $this->userId);
             }
         } catch (\Throwable $th) {
             Log::error($th);

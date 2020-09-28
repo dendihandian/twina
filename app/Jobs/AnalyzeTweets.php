@@ -196,6 +196,8 @@ class AnalyzeTweets implements ShouldQueue
                 'on_analyze_tweets' => false,
                 'tweets_analysis' => $tweetsAnalysis,
             ], $this->userId);
+
+            $topicRepository->clearCaches($this->topicId, $this->userId);
         } catch (\Throwable $th) {
             // dd($th);
             Log::error($th);
