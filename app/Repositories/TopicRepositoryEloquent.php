@@ -88,7 +88,7 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 
         $result = $this->topicEntity->addTopic($param, $userId);
 
-        $this->clearCaches($topicId, $userId);
+        $this->clearCaches(null, $userId);
 
         return $result;
     }
@@ -121,6 +121,6 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     public function clearCaches($topicId = null, $userId = null)
     {
         if (Cache::has($cachePath = $this->buildCachePath('topics', [], $userId))) Cache::forget($cachePath);
-        if (Cache::has($cachePath = $this->buildCachePath('topic', compact('topicId'), $userId))) Cache::forget($cachePath);
+        if ($topicId && Cache::has($cachePath = $this->buildCachePath('topic', compact('topicId'), $userId))) Cache::forget($cachePath);
     }
 }
