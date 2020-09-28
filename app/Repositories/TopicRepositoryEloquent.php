@@ -13,7 +13,7 @@ use App\Jobs\ComplementGraph;
 use App\Repositories\Traits\RepositoryCacheTrait;
 use App\Wrappers\Firebase\Firebase;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
+use App\Wrappers\CacheExtended as Cache;
 
 /**
  * Class TopicRepositoryEloquent.

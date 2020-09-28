@@ -7,7 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\PreferenceRepository;
 use App\Entities\Preference;
 use App\Repositories\Traits\RepositoryCacheTrait;
-use Illuminate\Support\Facades\Cache;
+use App\Wrappers\CacheExtended as Cache;
 
 /**
  * Class PreferenceRepositoryEloquent.
