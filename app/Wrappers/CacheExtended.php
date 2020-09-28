@@ -30,4 +30,11 @@ class CacheExtended
             Cache::put($key, $value);
         }
     }
+
+    public static function forget($key)
+    {
+        if (env('CACHE_ENABLED', false)) {
+            Cache::forget($key);
+        }
+    }
 }
