@@ -12,3 +12,18 @@
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 @import "~@fortawesome/fontawesome-free/scss/brands";
+
+
+.app {
+    min-height: 100vh;
+}
+
+@import "components/header.scss";
+@import "components/main.scss";
+@import "components/footer.scss";
+@import "components/graph-container.scss";
+@import "components/hero.scss";
+
+.highlighted-topic {
+    min-height: calc(100vh - 5.9rem);
+}

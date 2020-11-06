@@ -18,7 +18,11 @@ Auth::routes();
 Route::prefix('register')->middleware('prodRestrict')->group(function () {
 });
 
+// pages
 Route::get('/', 'PageController@landingPage')->name('landing_page');
+Route::get('/highlighted', 'PageController@highlightedTopic')->name('highlighted');
+Route::get('/public-topics', 'PageController@publicTopics')->name('public_topics');
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/profile/reset-password', 'HomeController@resetPassword')->name('profile.reset_password');
 

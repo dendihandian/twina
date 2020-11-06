@@ -1,46 +1,13 @@
 @extends('layouts.app')
 
-@section('style')
-    @include('graph.style')
-@endsection
-
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card mt-0">
-                <div class="card-body">
-                    @include('graph.svg', ['svgWidth' => 700])
-                </div>
-                <div class="card-footer text-right">
-                    @if (isset($topic['text']) && !empty($topic['text']))
-                        @php
-                            $topicUrl = "https://twitter.com/search?q=" . urlencode($topic['text'])
-                        @endphp
-                        <a target="_blank" href="{{ $topicUrl }}">{{ $topic['text'] }}</a>
-                    @else
-                        <span>-</span>
-                    @endif
-                </div>
-            </div>
-        </div>
-        @guest
-        <div class="col-md-4 d-flex align-items-center">
-            @include('ui.login-card')
-        </div>
-        @endguest
+    <div class="hero jumbotron">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <hr class="my-4">
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">See the highlighted topic</a>
+        </p>
     </div>
-    <div class="row">
-        @include('topics.tweets.analysis.analysis-card')
-    </div>
-    <div class="row">
-        @include('topics.graph.analysis.analysis-card')
-    </div>
-</div>
 @endsection
-
-@section('script')
-    @include('graph.script')
-    @include('charts.script')
-@endsection
-

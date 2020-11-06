@@ -13,15 +13,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="app d-flex flex-column">
-        @include('components.header')
-
-        <main class="flex-grow-1">
-            @yield('content')
-        </main>
-
-        @include('components.footer')
-    </div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero voluptatibus quas, itaque accusamus molestiae optio tenetur fugiat tempora esse ad nam libero explicabo dolorum fugit eius, aut, facilis adipisci laboriosam?</p>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
