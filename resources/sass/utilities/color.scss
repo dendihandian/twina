@@ -1,3 +1,11 @@
 .bg-teal {
-    background-color: #2C7A7B;
+    background-color: $teal;
+}
+
+.text-teal {
+    color: $teal;
+}
+
+.nav-item-teal:hover {
+    background-color: $teal-secondary;
 }
