@@ -12,16 +12,16 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
-    <div class="app d-flex flex-column">
-        @include('components.header')
+<body class="vw-100 min-vh-100 d-flex flex-column justify-content-between">
 
-        <main class="flex-grow-1">
-            @yield('content')
-        </main>
+    @include('components.header')
 
-        @include('components.footer')
-    </div>
+    <main class="overflow-hidden">
+        @yield('content')
+    </main>
+
+    @include('components.footer')
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>

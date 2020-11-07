@@ -18,6 +18,8 @@
     min-height: 100vh;
 }
 
+@import "utilities/color.scss";
+
 @import "components/header.scss";
 @import "components/main.scss";
 @import "components/footer.scss";
