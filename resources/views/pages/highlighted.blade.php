@@ -12,7 +12,7 @@
             @include('components.graph-feature', ['label' => __('Tweets count'), 'value' => $topic['tweets_count'] ?? '-' ])
             @include('components.graph-feature', ['label' => __('Last fetch count'), 'value' => $topic['last_fetch_count'] ?? '' ])
             <hr class="w-75 text-left ml-0">
-            @include('components.graph-feature', ['label' => __('People / Nodes count'), 'value' => isset($topic['graph']['nodes']) ? count($topic['graph']['nodes']) : '-'])
+            @include('components.graph-feature', ['label' => __('Peoples / Nodes count'), 'value' => isset($topic['graph']['nodes']) ? count($topic['graph']['nodes']) : '-'])
             @include('components.graph-feature', ['label' => __('Links / Edges count'), 'value' => isset($topic['graph']['edges']) ? count($topic['graph']['edges']) : '-' ])
         </div>
     </div>

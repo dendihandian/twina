@@ -14,10 +14,10 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item nav-item-teal py-2 px-4 px-md-1">
-                    <a href="#" class="nav-link text-white">Login</a>
+                    <a href="{{ route('login') }}" class="nav-link text-white">Login</a>
                 </li>
                 <li class="nav-item nav-item-teal py-2 px-4 px-md-1">
-                    <a href="#" class="nav-link text-white">Register</a>
+                    <a href="{{ route('register') }}" class="nav-link text-white">Register</a>
                 </li>
             </ul>
         </div>
