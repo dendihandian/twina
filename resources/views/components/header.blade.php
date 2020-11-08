@@ -9,14 +9,14 @@
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav">
-                <li class="nav-item nav-item-teal py-2 px-1"><a href="{{ route('highlighted') }}" class="nav-link text-white">Highlighted Topic</a></li>
-                <li class="nav-item nav-item-teal py-2 px-1"><a href="{{ route('public_topics') }}" class="nav-link text-white">Public Topics</a></li>
+                <li class="nav-item nav-item-teal py-2 px-4 px-md-1"><a href="{{ route('highlighted') }}" class="nav-link text-white">Highlighted Topic</a></li>
+                <li class="nav-item nav-item-teal py-2 px-4 px-md-1"><a href="{{ route('public_topics') }}" class="nav-link text-white">Public Topics</a></li>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav-item nav-item-teal py-2 px-1">
+                <li class="nav-item nav-item-teal py-2 px-4 px-md-1">
                     <a href="#" class="nav-link text-white">Login</a>
                 </li>
-                <li class="nav-item nav-item-teal py-2 px-1">
+                <li class="nav-item nav-item-teal py-2 px-4 px-md-1">
                     <a href="#" class="nav-link text-white">Register</a>
                 </li>
             </ul>

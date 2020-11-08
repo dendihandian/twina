@@ -33,4 +33,9 @@ class PageController extends Controller
 
         return view('pages.highlighted', compact('topic', 'graph', 'tweetsAnalysis'));
     }
+
+    public function publicTopics()
+    {
+        return view('pages.public-topics');
+    }
 }
