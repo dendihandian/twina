@@ -19,17 +19,18 @@ class PageController extends Controller
 
     public function landingPage()
     {
-        // $topicId = $this->preferenceRepository->getSelectedTopic();
-        // $topic = $topicId ? $this->topicRepository->getTopic($topicId) : null;
-        // $tweetsAnalysis = $topic['tweets_analysis'] ?? [];
-        // $graph = $topic['graph'] ?? null;
-
-        // return view('pages.landing', compact('topic', 'graph', 'tweetsAnalysis'));
         return view('pages.landing');
     }
 
     public function highlightedTopic()
     {
-        return view('pages.highlighted');
+        $topicId = $this->preferenceRepository->getSelectedTopic();
+        $topic = $topicId ? $this->topicRepository->getTopic($topicId) : null;
+        $tweetsAnalysis = $topic['tweets_analysis'] ?? [];
+        $graph = $topic['graph'] ?? null;
+
+        // dd($topic);
+
+        return view('pages.highlighted', compact('topic', 'graph', 'tweetsAnalysis'));
     }
 }

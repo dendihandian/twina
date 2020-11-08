@@ -1,6 +1,6 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-teal py-2 px-4 py-md-0">
-        <a class="navbar-brand text-white" href="#">
+        <a class="navbar-brand text-white" href="{{ route('landing_page') }}">
             <i class="fab fa-twitter"></i>&nbsp;Twina
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

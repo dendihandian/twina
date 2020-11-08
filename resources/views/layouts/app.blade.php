@@ -23,6 +23,7 @@
     @include('components.footer')
 
     <!-- Scripts -->
+    @yield('graph-data')
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 </html>
